@@ -272,10 +272,9 @@ class StatusResult:
 
 class MemCellExtractor(ABC):
     def __init__(
-        self, raw_data_type: RawDataType, llm_provider=LLMProvider, **llm_kwargs
+        self, raw_data_type: RawDataType, llm_provider=LLMProvider
     ):
         self.raw_data_type = raw_data_type
-        self.llm_kwargs = llm_kwargs
         self._llm_provider = llm_provider
 
     @abstractmethod

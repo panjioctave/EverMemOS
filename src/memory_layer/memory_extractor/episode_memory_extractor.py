@@ -12,12 +12,20 @@ import re, json, asyncio, uuid
 
 
 from ..prompts.zh.episode_mem_prompts import (
-    # from ..prompts.en.episode_mem_prompts import (
-    # from ..prompts.eval.episode_mem_prompts import (
+# from ..prompts.en.episode_mem_prompts import (
     EPISODE_GENERATION_PROMPT,
     GROUP_EPISODE_GENERATION_PROMPT,
     DEFAULT_CUSTOM_INSTRUCTIONS,
 )
+
+# from ..prompts.zh.episode_mem_prompts import (
+    # from ..prompts.en.episode_mem_prompts import (
+from ..prompts.eval.episode_mem_prompts import (
+    EPISODE_GENERATION_PROMPT as EVAL_EPISODE_GENERATION_PROMPT,
+    GROUP_EPISODE_GENERATION_PROMPT as EVAL_GROUP_EPISODE_GENERATION_PROMPT,
+    DEFAULT_CUSTOM_INSTRUCTIONS as EVAL_DEFAULT_CUSTOM_INSTRUCTIONS,
+)
+
 
 from ..llm.llm_provider import LLMProvider
 
@@ -54,10 +62,19 @@ class EpisodeMemoryExtractRequest(MemoryExtractRequest):
 
 
 class EpisodeMemoryExtractor(MemoryExtractor):
-    def __init__(self, llm_provider: LLMProvider | None = None):
+    def __init__(self, llm_provider: LLMProvider | None = None, use_eval_prompts: bool = False):
         super().__init__(MemoryType.EPISODE_SUMMARY)
         self.llm_provider = llm_provider
         self.semantic_extractor = SemanticMemoryExtractor(self.llm_provider)
+        self.use_eval_prompts = use_eval_prompts
+        if self.use_eval_prompts:
+            self.episode_generation_prompt = EVAL_EPISODE_GENERATION_PROMPT
+            self.group_episode_generation_prompt = EVAL_GROUP_EPISODE_GENERATION_PROMPT
+            self.default_custom_instructions = EVAL_DEFAULT_CUSTOM_INSTRUCTIONS
+        else:
+            self.episode_generation_prompt = EPISODE_GENERATION_PROMPT
+            self.group_episode_generation_prompt = GROUP_EPISODE_GENERATION_PROMPT
+            self.default_custom_instructions = DEFAULT_CUSTOM_INSTRUCTIONS
 
     def _parse_timestamp(self, timestamp) -> datetime:
         """
@@ -301,12 +318,12 @@ class EpisodeMemoryExtractor(MemoryExtractor):
             # 根据使用场景选择提示词
             if use_group_prompt:
                 # 与 extract_memcell 配套使用
-                prompt_template = GROUP_EPISODE_GENERATION_PROMPT
+                prompt_template = self.group_episode_generation_prompt
                 content_key = "conversation"
                 time_key = "conversation_start_time"
             else:
                 # 单独使用
-                prompt_template = EPISODE_GENERATION_PROMPT
+                prompt_template = self.episode_generation_prompt
                 content_key = "conversation"
                 time_key = "conversation_start_time"
             default_title = "Conversation Episode"
@@ -325,7 +342,7 @@ class EpisodeMemoryExtractor(MemoryExtractor):
             format_params = {
                 time_key: start_time_str,
                 content_key: combined_content,
-                "custom_instructions": DEFAULT_CUSTOM_INSTRUCTIONS,
+                "custom_instructions": self.default_custom_instructions,
             }
             prompt = prompt_template.format(**format_params)
             response = await self.llm_provider.generate(prompt)
@@ -381,7 +398,7 @@ class EpisodeMemoryExtractor(MemoryExtractor):
             format_params = {
                 time_key: start_time_str,
                 content_key: combined_content,
-                "custom_instructions": DEFAULT_CUSTOM_INSTRUCTIONS,
+                "custom_instructions": self.default_custom_instructions,
             }
 
             participants = []

@@ -84,6 +84,42 @@ class ProfileMemory(Memory):
         """Ensure the memory type is set to PROFILE."""
         self.memory_type = MemoryType.PROFILE
         super().__post_init__()
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """重写 to_dict() 以包含 ProfileMemory 的所有字段"""
+        # 先获取基类的字段
+        base_dict = super().to_dict()
+        
+        # 添加 ProfileMemory 特有的字段
+        base_dict.update({
+            "user_name": self.user_name,
+            "hard_skills": self.hard_skills,
+            "soft_skills": self.soft_skills,
+            "output_reasoning": self.output_reasoning,
+            "way_of_decision_making": self.way_of_decision_making,
+            "personality": self.personality,
+            "projects_participated": [
+                p.to_dict() if hasattr(p, 'to_dict') else p
+                for p in (self.projects_participated or [])
+            ] if self.projects_participated else None,
+            "user_goal": self.user_goal,
+            "work_responsibility": self.work_responsibility,
+            "working_habit_preference": self.working_habit_preference,
+            "interests": self.interests,
+            "tendency": self.tendency,
+            "motivation_system": self.motivation_system,
+            "fear_system": self.fear_system,
+            "value_system": self.value_system,
+            "humor_use": self.humor_use,
+            "colloquialism": self.colloquialism,
+            "group_importance_evidence": (
+                self.group_importance_evidence.to_dict() 
+                if hasattr(self.group_importance_evidence, 'to_dict')
+                else self.group_importance_evidence
+            ) if self.group_importance_evidence else None,
+        })
+        
+        return base_dict
 
 
 @dataclass

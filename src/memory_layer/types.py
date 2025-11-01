@@ -156,10 +156,21 @@ class Memory:
         pass
 
     def to_dict(self) -> Dict[str, Any]:
+        # 安全处理 timestamp（可能是 datetime、str 或 None）
+        timestamp_str = None
+        if self.timestamp:
+            if isinstance(self.timestamp, str):
+                timestamp_str = self.timestamp if self.timestamp else None
+            else:
+                try:
+                    timestamp_str = to_iso_format(self.timestamp)
+                except Exception:
+                    timestamp_str = str(self.timestamp) if self.timestamp else None
+        
         return {
             "memory_type": self.memory_type.value if self.memory_type else None,
             "user_id": self.user_id,
-            "timestamp": to_iso_format(self.timestamp),  # 转换为ISO格式字符串
+            "timestamp": timestamp_str,
             "ori_event_id_list": self.ori_event_id_list,
             "subject": self.subject,
             "summary": self.summary,

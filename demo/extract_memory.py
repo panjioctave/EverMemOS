@@ -33,8 +33,8 @@ if str(PROJECT_ROOT / "src") not in sys.path:
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from memory_layer.memcell_extractor.base_memcell_extractor import RawData
-from memory_layer.memcell_extractor.conv_memcell_extractor_with_cluster import (
-    ConvMemCellExtractorWithCluster as ConvMemCellExtractor,
+from memory_layer.memcell_extractor.conv_memcell_extractor import (
+    ConvMemCellExtractor,
     ConversationMemCellExtractRequest,
 )
 from src.memory_layer.llm.llm_provider import LLMProvider

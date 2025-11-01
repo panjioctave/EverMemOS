@@ -6,18 +6,23 @@ boundaries in various types of content (conversations, emails, notes, etc.).
 """
 
 import time
-from token import OP
-from typing import Dict, Any, Optional, List
+import os
+from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
 from dataclasses import dataclass
 import uuid
 import json, re
 import asyncio
+from common_utils.datetime_utils import (
+    from_iso_format as dt_from_iso_format,
+    from_timestamp as dt_from_timestamp,
+    get_now_with_timezone,
+)
 from ..llm.llm_provider import LLMProvider
 from ..types import RawDataType
 from ..prompts.zh.conv_prompts import CONV_BOUNDARY_DETECTION_PROMPT
 
-# from ..prompts.eval.conv_prompts import CONV_BOUNDARY_DETECTION_PROMPT
+from ..prompts.eval.conv_prompts import CONV_BOUNDARY_DETECTION_PROMPT as EVAL_CONV_BOUNDARY_DETECTION_PROMPT
 from .base_memcell_extractor import (
     MemCellExtractor,
     RawData,
@@ -25,11 +30,12 @@ from .base_memcell_extractor import (
     StatusResult,
     MemCellExtractRequest,
 )
-from ..memory_extractor.episode_memory_extractor_locomo import (
+from ..memory_extractor.episode_memory_extractor import (
     EpisodeMemoryExtractor,
     EpisodeMemoryExtractRequest,
 )
 from core.observation.logger import get_logger
+from agentic_layer.vectorize_service import get_vectorize_service
 
 logger = get_logger(__name__)
 
@@ -51,11 +57,25 @@ class ConversationMemCellExtractRequest(MemCellExtractRequest):
 
 
 class ConvMemCellExtractor(MemCellExtractor):
-    def __init__(self, llm_provider=LLMProvider, **llm_kwargs):
+    def __init__(
+        self,
+        llm_provider=LLMProvider,
+        use_eval_prompts: bool = False,
+    ):
         # Ensure base class receives the correct raw_data_type and provider
-        super().__init__(RawDataType.CONVERSATION, llm_provider, **llm_kwargs)
+        super().__init__(RawDataType.CONVERSATION, llm_provider)
         self.llm_provider = llm_provider
-        self.episode_extractor = EpisodeMemoryExtractor(llm_provider, **llm_kwargs)
+        self.use_eval_prompts = use_eval_prompts
+        self.episode_extractor = EpisodeMemoryExtractor(llm_provider, use_eval_prompts)
+        
+        if use_eval_prompts:
+            self.conv_boundary_detection_prompt = EVAL_CONV_BOUNDARY_DETECTION_PROMPT
+        else:
+            self.conv_boundary_detection_prompt = CONV_BOUNDARY_DETECTION_PROMPT
+
+    def shutdown(self) -> None:
+        """Cleanup resources."""
+        pass
 
     def _extract_participant_ids(
         self, chat_raw_data_list: List[Dict[str, Any]]
@@ -230,7 +250,7 @@ class ConvMemCellExtractor(MemCellExtractor):
             f"[ConversationEpisodeBuilder] Detect boundary – history tokens: {len(history_text)} new tokens: {len(new_text)} time gap: {time_gap_info}"
         )
 
-        prompt = CONV_BOUNDARY_DETECTION_PROMPT.format(
+        prompt = self.conv_boundary_detection_prompt.format(
             conversation_history=history_text,
             new_messages=new_text,
             time_gap_info=time_gap_info,
@@ -262,7 +282,9 @@ class ConvMemCellExtractor(MemCellExtractor):
             )
 
     async def extract_memcell(
-        self, request: ConversationMemCellExtractRequest
+        self,
+        request: ConversationMemCellExtractRequest,
+        use_semantic_extraction: bool = False,
     ) -> tuple[Optional[MemCell], Optional[StatusResult]]:
         history_message_dict_list = []
         for raw_data in request.history_raw_data_list:
@@ -313,11 +335,16 @@ class ConvMemCellExtractor(MemCellExtractor):
 
         if should_end:
             # TODO 重构专项：转为int逻辑不对 应该保持为datetime
-            timestamp = history_message_dict_list[-1].get("timestamp")
-            if isinstance(timestamp, str):
-                timestamp = int(
-                    datetime.fromisoformat(timestamp.replace("Z", "+00:00")).timestamp()
-                )
+            ts_value = history_message_dict_list[-1].get("timestamp")
+            
+            if isinstance(ts_value, str):
+                # 统一解析为带时区的 datetime
+                timestamp = dt_from_iso_format(ts_value.replace("Z", "+00:00"))
+            elif isinstance(ts_value, (int, float)):
+                timestamp = dt_from_timestamp(ts_value)
+            else:
+                timestamp = get_now_with_timezone()
+        
 
             participants = self._extract_participant_ids(history_message_dict_list)
             # 创建 MemCell
@@ -347,7 +374,9 @@ class ConvMemCellExtractor(MemCellExtractor):
                     )
                     now = time.time()
                     episode_result = await self.episode_extractor.extract_memory(
-                        episode_request, use_group_prompt=True
+                        episode_request,
+                        use_group_prompt=True,
+                        use_semantic_extraction=use_semantic_extraction,
                     )
                     logger.debug(
                         f"📚 自动触发情景记忆提取, 耗时: {time.time() - now}秒"
@@ -355,6 +384,36 @@ class ConvMemCellExtractor(MemCellExtractor):
                     if episode_result and isinstance(episode_result, MemCell):
                         # GROUP_EPISODE_GENERATION_PROMPT 模式：返回包含情景记忆的 MemCell
                         logger.info(f"✅ 成功生成情景记忆并存储到 MemCell 中")
+                        # Attach embedding info to MemCell (episode preferred)
+                        try:
+                            text_for_embed = (
+                                episode_result.episode or episode_result.summary or ""
+                            )
+                            if text_for_embed:
+                                vs = get_vectorize_service()
+                                vec = await vs.get_embedding(text_for_embed)
+                                episode_result.extend = episode_result.extend or {}
+                                episode_result.extend["embedding"] = (
+                                    vec.tolist()
+                                    if hasattr(vec, "tolist")
+                                    else list(vec)
+                                )
+                                episode_result.extend["vector_model"] = (
+                                    vs.get_model_name()
+                                )
+
+                        except Exception:
+                            logger.debug("Embedding attach failed; continue without it")
+                        
+                        # 提交到聚类器（如果存在）
+                        if hasattr(self, '_cluster_worker') and self._cluster_worker:
+                            try:
+                                self._cluster_worker.submit(
+                                    request.group_id, episode_result.to_dict()
+                                )
+                            except Exception as e:
+                                logger.debug(f"Failed to submit to cluster worker: {e}")
+                        
                         return (episode_result, status_control_result)
                     else:
                         logger.warning(
@@ -371,6 +430,27 @@ class ConvMemCellExtractor(MemCellExtractor):
                 else:
                     logger.error(f"❌ 所有重试次数均失败，未能提取情景记忆")
 
+            # Attach embedding info to MemCell if available
+            try:
+                text_for_embed = memcell.episode
+                if text_for_embed:
+                    vs = get_vectorize_service()
+                    vec = await vs.get_embedding(text_for_embed)
+                    memcell.extend = memcell.extend or {}
+                    memcell.extend["embedding"] = (
+                        vec.tolist() if hasattr(vec, "tolist") else list(vec)
+                    )
+                    memcell.extend["vector_model"] = vs.get_model_name()
+            except Exception:
+                logger.debug("Embedding attach failed; continue without it")
+            
+            # 提交到聚类器（如果存在）
+            if hasattr(self, '_cluster_worker') and self._cluster_worker:
+                try:
+                    self._cluster_worker.submit(request.group_id, memcell.to_dict())
+                except Exception as e:
+                    logger.debug(f"Failed to submit to cluster worker: {e}")
+            
             return (memcell, status_control_result)
         elif should_wait:
             logger.debug(f"⏳ Waiting for more messages: {reason}")
@@ -388,7 +468,14 @@ class ConvMemCellExtractor(MemCellExtractor):
         msg_type = content.get('msgType') if isinstance(content, dict) else None
 
         # 定义支持的消息类型和对应的占位符
-        SUPPORTED_MSG_TYPES = {1: None}  # TEXT - 保持原文本
+        SUPPORTED_MSG_TYPES = {
+            1: None,  # TEXT - 保持原文本
+            2: "[图片]",  # PICTURE
+            3: "[视频]",  # VIDEO
+            4: "[音频]",  # AUDIO
+            5: "[文件]",  # FILE - 保持原文本（文本和文件在同一个消息里）
+            6: "[文件]",  # FILES
+        }
 
         if isinstance(content, dict) and msg_type is not None:
             # 检查是否为支持的消息类型
