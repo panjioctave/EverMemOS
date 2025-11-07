@@ -5,6 +5,7 @@ import os
 import sys
 from pathlib import Path
 from time import time
+from typing import List, Dict, Optional
 
 import pandas as pd
 from tqdm import tqdm
@@ -16,6 +17,97 @@ from evaluation.src.adapters.evermemos.prompts.answer_prompts import ANSWER_PROM
 
 # 使用 Memory Layer 的 LLMProvider
 from memory_layer.llm.llm_provider import LLMProvider
+
+
+# 🔥 Context 构建模板（从 stage3 迁移过来）
+TEMPLATE = """Episodes memories for conversation between {speaker_1} and {speaker_2}:
+
+    {speaker_memories}
+"""
+
+
+def load_memcells_by_conversation(conv_idx: int, memcells_dir: Path) -> Dict[str, dict]:
+    """
+    加载指定对话的所有 memcells，返回 event_id -> memcell 的映射
+    
+    Args:
+        conv_idx: 对话索引
+        memcells_dir: memcells 目录路径
+    
+    Returns:
+        {event_id: memcell_dict} 的映射
+    """
+    memcell_file = memcells_dir / f"memcell_list_conv_{conv_idx}.json"
+    
+    if not memcell_file.exists():
+        print(f"Warning: Memcell file not found: {memcell_file}")
+        return {}
+    
+    try:
+        with open(memcell_file, "r", encoding="utf-8") as f:
+            memcells = json.load(f)
+        
+        # 构建 event_id -> memcell 的映射
+        memcell_map = {}
+        for memcell in memcells:
+            event_id = memcell.get("event_id")
+            if event_id:
+                memcell_map[event_id] = memcell
+        
+        return memcell_map
+    
+    except Exception as e:
+        print(f"Error loading memcells from {memcell_file}: {e}")
+        return {}
+
+
+def build_context_from_event_ids(
+    event_ids: List[str],
+    memcell_map: Dict[str, dict],
+    speaker_a: str,
+    speaker_b: str,
+    top_k: int = 10
+) -> str:
+    """
+    根据 event_ids 从 memcell_map 中提取对应的 episode memory，构建 context
+    
+    Args:
+        event_ids: 检索到的 event_ids 列表（已按相关性排序）
+        memcell_map: event_id -> memcell 的映射
+        speaker_a: 说话者 A
+        speaker_b: 说话者 B
+        top_k: 选择前 k 个 event_ids（默认 10）
+    
+    Returns:
+        格式化的 context 字符串
+    """
+    # 🔥 选择 top-k event_ids
+    selected_event_ids = event_ids[:top_k]
+    
+    # 从 memcell_map 中提取对应的 episode memory
+    retrieved_docs_text = []
+    for event_id in selected_event_ids:
+        memcell = memcell_map.get(event_id)
+        if not memcell:
+            # 找不到对应的 memcell，跳过
+            continue
+        
+        subject = memcell.get('subject', 'N/A')
+        episode = memcell.get('episode', 'N/A')
+        doc_text = f"{subject}: {episode}\n---"
+        retrieved_docs_text.append(doc_text)
+    
+    # 拼接所有文档
+    speaker_memories = "\n\n".join(retrieved_docs_text)
+    
+    # 使用模板格式化最终 context
+    context = TEMPLATE.format(
+        speaker_1=speaker_a,
+        speaker_2=speaker_b,
+        speaker_memories=speaker_memories,
+    )
+    
+    return context
 
 
 async def locomo_response(
@@ -67,15 +159,26 @@ async def locomo_response(
     return result
 
 
-async def process_qa(qa, search_result, llm_provider, experiment_config):
+async def process_qa(
+    qa, 
+    search_result, 
+    llm_provider, 
+    experiment_config,
+    memcell_map: Dict[str, dict],
+    speaker_a: str,
+    speaker_b: str
+):
     """
-    处理单个 QA 对
+    处理单个 QA 对（新版：从 event_ids 构建 context）
     
     Args:
         qa: 问题和答案对
-        search_result: 检索结果（包含 context）
+        search_result: 检索结果（包含 event_ids）
         llm_provider: LLM Provider
         experiment_config: 实验配置
+        memcell_map: event_id -> memcell 的映射
+        speaker_a: 说话者 A
+        speaker_b: 说话者 B
     
     Returns:
         包含问题、答案、类别等信息的字典
@@ -85,8 +188,20 @@ async def process_qa(qa, search_result, llm_provider, experiment_config):
     gold_answer = qa.get("answer")
     qa_category = qa.get("category")
 
+    # 🔥 从 event_ids 构建 context（使用 top_k）
+    event_ids = search_result.get("event_ids", [])
+    top_k = experiment_config.response_top_k
+    
+    context = build_context_from_event_ids(
+        event_ids=event_ids,
+        memcell_map=memcell_map,
+        speaker_a=speaker_a,
+        speaker_b=speaker_b,
+        top_k=top_k
+    )
+
     answer = await locomo_response(
-        llm_provider, search_result.get("context"), query, experiment_config
+        llm_provider, context, query, experiment_config
     )
 
     response_duration_ms = (time() - start) * 1000
@@ -100,9 +215,10 @@ async def process_qa(qa, search_result, llm_provider, experiment_config):
         "answer": answer,
         "category": qa_category,
         "golden_answer": gold_answer,
-        "search_context": search_result.get("context", ""),
+        "search_context": context,  # 保存构建的 context
+        "event_ids_used": event_ids[:top_k],  # 🔥 记录实际使用的 event_ids
         "response_duration_ms": response_duration_ms,
-        "search_duration_ms": search_result.get("duration_ms", 0),
+        "search_duration_ms": search_result.get("retrieval_metadata", {}).get("total_latency_ms", 0),
     }
 
 
@@ -140,6 +256,19 @@ async def main(search_path, save_path):
 
     num_users = len(locomo_df)
     
+    # 🔥 加载 memcells 目录
+    memcells_dir = Path(search_path).parent / "memcells"
+    if not memcells_dir.exists():
+        print(f"Error: Memcells directory not found: {memcells_dir}")
+        return
+    
+    print(f"\n{'='*60}")
+    print(f"Stage4: LLM Response Generation")
+    print(f"{'='*60}")
+    print(f"Total conversations: {num_users}")
+    print(f"Response top-k: {experiment_config.response_top_k}")
+    print(f"Memcells directory: {memcells_dir}")
+    
     # 🔥 优化1：全局并发控制（关键优化）
     # 控制同时处理的 QA 对数量，避免 API 限流
     MAX_CONCURRENT = 50  # 可根据 API 限制调整（10-100）
@@ -149,16 +278,14 @@ async def main(search_path, save_path):
     all_tasks = []
     task_to_group = {}  # 用于追踪每个任务属于哪个 group
     
-    print(f"\n{'='*60}")
-    print(f"Stage4: LLM Response Generation")
-    print(f"{'='*60}")
-    print(f"Total conversations: {num_users}")
-    
     # 🔥 优化3：定义带并发控制的处理函数
-    async def process_qa_with_semaphore(qa, search_result, group_id):
+    async def process_qa_with_semaphore(qa, search_result, group_id, memcell_map, speaker_a, speaker_b):
         """带并发控制的 QA 处理"""
         async with semaphore:
-            result = await process_qa(qa, search_result, llm_provider, experiment_config)
+            result = await process_qa(
+                qa, search_result, llm_provider, experiment_config,
+                memcell_map, speaker_a, speaker_b
+            )
             return (group_id, result)
     
     total_qa_count = 0
@@ -168,6 +295,15 @@ async def main(search_path, save_path):
 
         group_id = f"locomo_exp_user_{group_idx}"
         search_results = locomo_search_results.get(group_id)
+        
+        # 🔥 加载当前对话的 memcells
+        memcell_map = load_memcells_by_conversation(group_idx, memcells_dir)
+        print(f"Loaded {len(memcell_map)} memcells for conversation {group_idx}")
+        
+        # 🔥 获取 speaker 信息
+        conversation_data = locomo_df["conversation"].iloc[group_idx]
+        speaker_a = conversation_data.get("speaker_a", "Speaker A")
+        speaker_b = conversation_data.get("speaker_b", "Speaker B")
 
         matched_pairs = []
         for qa in qa_set_filtered:
@@ -191,7 +327,7 @@ async def main(search_path, save_path):
         
         # 创建任务（全局并发）
         for qa, search_result in matched_pairs:
-            task = process_qa_with_semaphore(qa, search_result, group_id)
+            task = process_qa_with_semaphore(qa, search_result, group_id, memcell_map, speaker_a, speaker_b)
             all_tasks.append(task)
     
     print(f"Total questions to process: {total_qa_count}")
@@ -270,14 +406,14 @@ async def main(search_path, save_path):
 
 if __name__ == "__main__":
     config = ExperimentConfig()
+    # 🔥 修正：实际文件在 locomo_evaluation/ 目录下，而不是 results/ 目录
     search_result_path = str(
         Path(__file__).parent
-        / "results"
-        / config.experiment_name
+        / config.experiment_name  # 直接使用 experiment_name（即 "locomo_evaluation"）
         / "search_results.json"
     )
     save_path = (
-        Path(__file__).parent / "results" / config.experiment_name / "responses.json"
+        Path(__file__).parent / config.experiment_name / "responses.json"
     )
     # search_result_path = f"/Users/admin/Documents/Projects/b001-memsys/evaluation/locomo_evaluation/results/locomo_evaluation_0/nemori_locomo_search_results.json"
 

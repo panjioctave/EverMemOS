@@ -509,15 +509,13 @@ async def main():
     raw_data_dict = raw_data_load(dataset_path)
 
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-    os.makedirs(os.path.join(CURRENT_DIR, "results"), exist_ok=True)
+    # 🔥 修正：实际文件在 locomo_evaluation/ 目录下，而不是 results/ 目录
+    os.makedirs(os.path.join(CURRENT_DIR, config.experiment_name), exist_ok=True)
     os.makedirs(
-        os.path.join(CURRENT_DIR, "results", config.experiment_name), exist_ok=True
-    )
-    os.makedirs(
-        os.path.join(CURRENT_DIR, "results", config.experiment_name, "memcells"),
+        os.path.join(CURRENT_DIR, config.experiment_name, "memcells"),
         exist_ok=True,
     )
-    save_dir = os.path.join(CURRENT_DIR, "results", config.experiment_name, "memcells")
+    save_dir = os.path.join(CURRENT_DIR, config.experiment_name, "memcells")
 
     console = Console()
     

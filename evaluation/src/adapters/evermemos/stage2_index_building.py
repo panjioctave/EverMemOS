@@ -360,12 +360,13 @@ async def main():
     # --- Configuration ---
     # The directory containing the JSON files
     config = ExperimentConfig()
-    data_dir = Path(__file__).parent / "results" / config.experiment_name / "memcells"
+    # 🔥 修正：实际文件在 locomo_evaluation/ 目录下，而不是 results/ 目录
+    data_dir = Path(__file__).parent / config.experiment_name / "memcells"
     bm25_save_dir = (
-        Path(__file__).parent / "results" / config.experiment_name / "bm25_index"
+        Path(__file__).parent / config.experiment_name / "bm25_index"
     )
     emb_save_dir = (
-        Path(__file__).parent / "results" / config.experiment_name / "vectors"
+        Path(__file__).parent / config.experiment_name / "vectors"
     )
     os.makedirs(bm25_save_dir, exist_ok=True)
     os.makedirs(emb_save_dir, exist_ok=True)

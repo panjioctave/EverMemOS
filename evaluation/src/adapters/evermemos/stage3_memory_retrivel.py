@@ -31,10 +31,6 @@ from memory_layer.llm.llm_provider import LLMProvider
 
 # This file depends on the rank_bm25 library.
 # If you haven't installed it yet, run: pip install rank_bm25
-TEMPLATE = """Episodes memories for conversation between {speaker_1} and {speaker_2}:
-
-    {speaker_memories}
-"""
 
 
 def ensure_nltk_data():
@@ -102,6 +98,7 @@ def compute_maxsim_score(query_emb: np.ndarray, atomic_fact_embs: List[np.ndarra
     计算 query 与多个 atomic_fact embeddings 的最大相似度（MaxSim策略）
     
     MaxSim 策略的核心思想：
+    - 找到与 query 最相关的单个 atomic_fact
     - 只要有一个 atomic_fact 与 query 强相关，就认为整个 event_log 相关
     - 避免被不相关的 fact 稀释分数
     - 适用于记忆检索场景，用户通常只关注某一个方面
@@ -501,8 +498,8 @@ async def hybrid_search_with_rrf(
     bm25,
     docs,
     top_n: int = 40,
-    emb_candidates: int = 100,
-    bm25_candidates: int = 100,
+    emb_candidates: int = 50,
+    bm25_candidates: int = 50,
     rrf_k: int = 60,
     query_embedding: Optional[np.ndarray] = None  # 🔥 支持预计算的 embedding
 ) -> List[Tuple[dict, float]]:
@@ -526,8 +523,8 @@ async def hybrid_search_with_rrf(
         bm25: BM25 索引
         docs: 文档列表（用于 BM25）
         top_n: 最终返回的结果数量（默认 40）
-        emb_candidates: Embedding 检索的候选数量（默认 100）
-        bm25_candidates: BM25 检索的候选数量（默认 100）
+        emb_candidates: Embedding 检索的候选数量（默认 50）
+        bm25_candidates: BM25 检索的候选数量（默认 50）
         rrf_k: RRF 参数 k（默认 60，经验最优值）
     
     Returns:
@@ -1086,13 +1083,14 @@ async def main():
     """Main function to perform batch search and save results in nemori format."""
     # --- Configuration ---
     config = ExperimentConfig()
+    # 🔥 修正：实际文件在 locomo_evaluation/ 目录下，而不是 results/ 目录
     bm25_index_dir = (
-        Path(__file__).parent / "results" / config.experiment_name / "bm25_index"
+        Path(__file__).parent / config.experiment_name / "bm25_index"
     )
     emb_index_dir = (
-        Path(__file__).parent / "results" / config.experiment_name / "vectors"
+        Path(__file__).parent / config.experiment_name / "vectors"
     )
-    save_dir = Path(__file__).parent / "results" / config.experiment_name
+    save_dir = Path(__file__).parent / config.experiment_name
 
     dataset_path = config.datase_path
     results_output_path = save_dir / "search_results.json"
@@ -1341,31 +1339,26 @@ async def main():
                             "use_hybrid_search": config.use_hybrid_search,
                         }
 
-                    # ========== 格式化最终 context ==========
-                    context_str = ""
+                    # ========== 提取 event_ids ==========
+                    event_ids = []
                     if top_results:
-                        retrieved_docs_text = []
                         for doc, score in top_results:
-                            subject = doc.get('subject', 'N/A')
-                            episode = doc.get('episode', 'N/A')
-                            doc_text = f"{subject}: {episode}\n---"
-                            retrieved_docs_text.append(doc_text)
-                        context_str = "\n\n".join(retrieved_docs_text)
+                            event_id = doc.get('event_id')
+                            if event_id:
+                                event_ids.append(event_id)
 
                     # 计算处理时间
                     qa_latency_ms = (time.time() - qa_start_time) * 1000
                     
                     result = {
                         "query": question,
-                        "context": TEMPLATE.format(
-                            speaker_1=speaker_a,
-                            speaker_2=speaker_b,
-                            speaker_memories=context_str,
-                        ),
+                        "event_ids": event_ids,  # 🔥 返回 event_ids 而不是 context
                         "original_qa": qa_pair,
                         "retrieval_metadata": {
                             **retrieval_metadata,
                             "qa_latency_ms": qa_latency_ms,
+                            "target_event_ids_count": len(top_results),  # 记录目标数量
+                            "actual_event_ids_count": len(event_ids),    # 记录实际提取的数量
                         }
                     }
                     

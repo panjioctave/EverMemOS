@@ -84,12 +84,18 @@ def convert_numpy_types(obj):
 
 
 async def process_group_responses(
-    group_id, group_responses, oai_client, num_runs: int
+    group_id, group_responses, oai_client, num_runs: int, disable_progress: bool = False
 ):
     graded_responses = []
 
+    # 🔥 只在非禁用模式下显示进度条
     # Process responses with asyncio for concurrent API calls
-    for response in tqdm(group_responses, desc=f"Processing group {group_id}"):
+    for response in tqdm(
+        group_responses, 
+        desc=f"Processing {group_id}", 
+        disable=disable_progress,
+        leave=False  # 完成后清除进度条
+    ):
         question = response.get("question")
         answer = response.get("answer")
         ground_truth = response.get("golden_answer")
@@ -127,19 +133,20 @@ async def process_group_responses(
 
 
 async def process_single_group(
-    group_id, group_responses, oai_client, num_runs
+    group_id, group_responses, oai_client, num_runs, disable_progress: bool = False
 ):
     try:
         start_time = time.time()
         result = await process_group_responses(
-            group_id, group_responses, oai_client, num_runs
+            group_id, group_responses, oai_client, num_runs, disable_progress
         )
         end_time = time.time()
         elapsed_time = round(end_time - start_time, 2)
-        print(f"Group {group_id} processed in {elapsed_time} seconds")
+        # 🔥 减少输出：只在出错或重要时刻打印
+        # print(f"Group {group_id} processed in {elapsed_time} seconds")
         return result
     except Exception as e:
-        print(f"Error processing group {group_id}: {e}")
+        print(f"❌ Error processing group {group_id}: {e}")
         return group_id, []
 
 
@@ -150,11 +157,15 @@ async def main():
     num_runs = 3
     max_workers = 10
 
-    print(f"Using {max_workers} concurrent workers for processing groups")
+    # 🔥 简化输出
+    print(f"\n{'='*60}")
+    print(f"🔍 Stage5: LLM-as-a-Judge Evaluation")
+    print(f"{'='*60}")
 
     # --- Path Setup ---
     current_dir = Path(__file__).parent
-    results_dir = current_dir / "results" / version
+    # 🔥 修正：实际文件在 locomo_evaluation/ 目录下，而不是 results/ 目录
+    results_dir = current_dir / version  # 直接使用 version（即 "locomo_evaluation"）
     response_path = results_dir / "responses.json"
     judged_path = results_dir / "judged.json"
 
@@ -171,7 +182,7 @@ async def main():
         with open(response_path) as file:
             locomo_responses = json.load(file)
     except FileNotFoundError:
-        print(f"Error: Response file not found at {response_path}")
+        print(f"❌ Error: Response file not found at {response_path}")
         return
 
     # --- Evaluation ---
@@ -181,9 +192,11 @@ async def main():
     total_responses_count = sum(
         len(locomo_responses.get(f"locomo_exp_user_{i}", [])) for i in range(num_users)
     )
-    print(
-        f"Found {total_responses_count} total responses across {num_users} users to evaluate"
-    )
+    print(f"📊 Total responses: {total_responses_count}")
+    print(f"👥 Total users: {num_users}")
+    print(f"🔄 Judgments per question: {num_runs}")
+    print(f"⚡ Concurrent workers: {max_workers}")
+    print(f"{'='*60}\n")
 
     # Create tasks for processing each group
     tasks = []
@@ -192,17 +205,17 @@ async def main():
         group_id = f"locomo_exp_user_{group_idx}"
         group_responses = locomo_responses.get(group_id, [])
         if not group_responses:
-            print(f"No responses found for group {group_id}")
+            # 🔥 减少输出：跳过空组不打印
             continue
 
         active_users += 1
         tasks.append(
             process_single_group(
-                group_id, group_responses, oai_client, num_runs
+                group_id, group_responses, oai_client, num_runs, disable_progress=True  # 🔥 禁用单组进度条
             )
         )
 
-    print(f"Starting evaluation of {active_users} user groups with responses")
+    print(f"🚀 Starting evaluation...\n")
 
     semaphore = asyncio.Semaphore(max_workers)
 
@@ -211,12 +224,24 @@ async def main():
             return await task
 
     limited_tasks = [limited_task(task) for task in tasks]
-    group_results = await asyncio.gather(*limited_tasks)
+    
+    # 🔥 添加总体进度条
+    group_results = []
+    for coro in tqdm(
+        asyncio.as_completed(limited_tasks),
+        total=len(limited_tasks),
+        desc="📈 Evaluating groups",
+        unit="group"
+    ):
+        result = await coro
+        group_results.append(result)
 
     for group_id, graded_responses in group_results:
         all_grades[group_id] = graded_responses
 
-    print("\n=== Evaluation Complete: Calculating final scores ===")
+    print(f"\n{'='*60}")
+    print(f"✅ Evaluation Complete")
+    print(f"{'='*60}")
 
     # --- Score Calculation ---
     run_scores = []
@@ -240,24 +265,31 @@ async def main():
         if current_run_total_count > 0:
             evaluated_count = current_run_total_count
 
+    # 🔥 简化并美化结果输出
     if evaluated_count > 0:
         mean_of_scores = np.mean(run_scores)
         std_of_scores = np.std(run_scores)
-        print(f"LLM-as-a-Judge Mean Score: {mean_of_scores:.4f}")
-        print(f"LLM-as-a-Judge Standard Deviation: {std_of_scores:.4f}")
-        print(
-            f"(Calculated from {num_runs} separate runs over {evaluated_count} questions)"
-        )
+        
+        print(f"\n{'='*60}")
+        print(f"📊 Final Results")
+        print(f"{'='*60}")
+        print(f"🎯 Mean Accuracy:  {mean_of_scores:.4f} ({mean_of_scores*100:.2f}%)")
+        print(f"📈 Std Deviation:  {std_of_scores:.4f}")
+        print(f"📝 Questions:      {evaluated_count}")
+        print(f"🔄 Runs per Q:     {num_runs}")
+        print(f"{'='*60}")
         print(f"Individual run scores: {[round(s, 4) for s in run_scores]}")
+        print(f"{'='*60}\n")
     else:
-        print("No responses were evaluated")
-        print("LLM-as-a-Judge score: N/A (0/0)")
+        print("\n⚠️  No responses were evaluated")
+        print("LLM-as-a-Judge score: N/A (0/0)\n")
 
     # --- Save Results ---
     all_grades = convert_numpy_types(all_grades)
     with open(judged_path, "w") as f:
         json.dump(all_grades, f, indent=2)
-        print(f"Saved detailed evaluation results to {judged_path}")
+        print(f"💾 Saved detailed results to: {judged_path}")
+        print(f"✅ Stage5 complete!\n")
 
 
 if __name__ == "__main__":

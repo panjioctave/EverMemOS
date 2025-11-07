@@ -11,7 +11,7 @@ class ExperimentConfig:
     use_reranker: bool = True  # 启用 Reranker
     use_agentic_retrieval: bool = True
     use_multi_query: bool = True  #  启用多查询生成
-    num_conv: int = 10
+    num_conv: int = 10 #最终使用记忆条数
     
     # 🔥 新增：MemCell 提取功能开关
     enable_semantic_extraction: bool = False  # 是否启用语义记忆提取
@@ -63,6 +63,9 @@ class ExperimentConfig:
     "Determine if the passage contains specific facts, entities (names, dates, locations), "
     "or details that directly answer the question.")
     
+    # 🔥 Stage4 参数：从 event_ids 中选择 top-k 构建 context
+    response_top_k: int = 5  # 从检索到的 event_ids 中选择前 k 个构建 context
+    
     llm_service: str = "openai"  # openai, vllm
     llm_config: dict = {
         "openai": {
@@ -82,5 +85,6 @@ class ExperimentConfig:
             "max_tokens": 32768,
         },
     }
+    
     max_retries: int = 5
     max_concurrent_requests: int = 10
