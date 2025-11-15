@@ -184,6 +184,7 @@ class SemanticMemoryEsRepository(BaseRepository[EpisodicMemoryDoc]):
         from_: int = 0,
         explain: bool = False,
         participant_user_id: Optional[str] = None,
+        current_time: Optional[datetime] = None,
     ) -> Dict[str, Any]:
         """
         使用 elasticsearch-dsl 的统一搜索接口，支持多词查询和全面过滤
@@ -201,6 +202,7 @@ class SemanticMemoryEsRepository(BaseRepository[EpisodicMemoryDoc]):
             from_: 分页起始位置
             explain: 是否启用得分解释模式
             participant_user_id: 群组检索时额外要求参与者包含该用户
+            current_time: 当前时间（仅当需要按 start/end 有效期过滤时使用）
 
         Returns:
             搜索结果的hits部分，包含匹配的文档数据
@@ -320,6 +322,32 @@ class SemanticMemoryEsRepository(BaseRepository[EpisodicMemoryDoc]):
                         "_source": hit.to_dict(),
                     }
                     hits.append(hit_data)
+            
+            # 根据 current_time 过滤有效期
+            if current_time:
+                current_dt = current_time
+                if isinstance(current_dt, str):
+                    try:
+                        current_dt = datetime.fromisoformat(current_dt)
+                    except ValueError:
+                        try:
+                            current_dt = datetime.fromisoformat(
+                                current_dt.replace("Z", "+00:00")
+                            )
+                        except ValueError:
+                            current_dt = None
+                filtered_hits = []
+                for hit_data in hits:
+                    source = hit_data.get("_source", {}) or {}
+                    extend = source.get("extend") or {}
+                    start_dt = self._parse_datetime(extend.get("start_time"))
+                    end_dt = self._parse_datetime(extend.get("end_time"))
+                    if start_dt and current_dt and start_dt > current_dt:
+                        continue
+                    if end_dt and current_dt and end_dt < current_dt:
+                        continue
+                    filtered_hits.append(hit_data)
+                hits = filtered_hits
 
                 logger.debug(
                     "✅ 语义记忆DSL多词搜索成功: query=%s, user_id=%s, 找到 %d 条结果",
@@ -347,4 +375,17 @@ class SemanticMemoryEsRepository(BaseRepository[EpisodicMemoryDoc]):
                 e,
             )
             raise
+
+    @staticmethod
+    def _parse_datetime(value: Optional[str]) -> Optional[datetime]:
+        """解析 ISO 日期字符串"""
+        if not value:
+            return None
+        try:
+            return datetime.fromisoformat(value)
+        except ValueError:
+            try:
+                return datetime.fromisoformat(value.replace("Z", "+00:00"))
+            except ValueError:
+                return None
 

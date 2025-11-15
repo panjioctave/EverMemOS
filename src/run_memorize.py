@@ -178,8 +178,10 @@ class GroupChatMemorizer:
 
                             total_memories += memory_count
                             success_count += 1
-                            logger.info(f"  ✓ 成功保存 {memory_count} 条记忆")
-
+                            if memory_count > 0:
+                                logger.info(f"  ✓ 成功保存 {memory_count} 条记忆")
+                            else:
+                                logger.info(f"  ⏳ 等待情景边界")
                             # 添加延迟避免过快处理
                             time.sleep(0.1)
 

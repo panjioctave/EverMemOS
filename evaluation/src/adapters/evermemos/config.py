@@ -74,7 +74,7 @@ class ExperimentConfig:
             "base_url": "https://openrouter.ai/api/v1",
             "api_key": os.getenv("LLM_API_KEY"),
             "temperature": 0.3,
-            "max_tokens": 32768,
+            "max_tokens": 16384,
         },
         "vllm": {
             "llm_provider": "openai",
@@ -82,7 +82,7 @@ class ExperimentConfig:
             "base_url": "http://0.0.0.0:8000/v1",
             "api_key": "123",
             "temperature": 0,
-            "max_tokens": 32768,
+            "max_tokens": 16384,
         },
     }
     

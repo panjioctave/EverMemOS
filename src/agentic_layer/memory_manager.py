@@ -1306,12 +1306,15 @@ class MemoryManager:
                     "semantic_memory",
                 ):
                     es_kwargs["participant_user_id"] = participant_user_id
+                if data_source == "semantic_memory" and current_time is not None:
+                    es_kwargs["current_time"] = current_time
                 hits = await es_repo.multi_search(**es_kwargs)
                 
                 # 处理 ES 检索结果（不再基于 user_id 是否为空进行二次过滤）
                 for hit in hits:
                     source = hit.get('_source', {})
                     bm25_score = hit.get('_score', 0)
+                    metadata = source.get('extend', {})
                     result = {
                         'score': bm25_score,
                         'event_id': source.get('event_id', ''),
@@ -1320,8 +1323,14 @@ class MemoryManager:
                         'timestamp': source.get('timestamp', ''),
                         'episode': source.get('episode', ''),
                         'search_content': source.get('search_content', []),
-                        'metadata': source.get('extend', {}),
+                        'metadata': metadata,
                     }
+                    if isinstance(metadata, dict):
+                        result['start_time'] = metadata.get('start_time')
+                        result['end_time'] = metadata.get('end_time')
+                    else:
+                        result['start_time'] = None
+                        result['end_time'] = None
                     bm25_results.append((result, bm25_score))
                 
                 logger.debug(f"ES 检索完成: data_source={data_source}, 结果数={len(bm25_results)}")
@@ -1351,9 +1360,12 @@ class MemoryManager:
                     "retrieval_mode": "embedding",
                     "data_source": data_source,
                     "embedding_candidates": embedding_count,
-                    "final_count": len(memories),
                     "total_latency_ms": (time.time() - start_time) * 1000
                 }
+                memories = self._filter_semantic_memories_by_time(
+                    memories, data_source, current_time
+                )
+                metadata["final_count"] = len(memories)
                 
             elif retrieval_mode == "bm25":
                 # 纯 BM25 检索
@@ -1364,9 +1376,12 @@ class MemoryManager:
                     "retrieval_mode": "bm25",
                     "data_source": data_source,
                     "bm25_candidates": bm25_count,
-                    "final_count": len(memories),
                     "total_latency_ms": (time.time() - start_time) * 1000
                 }
+                memories = self._filter_semantic_memories_by_time(
+                    memories, data_source, current_time
+                )
+                metadata["final_count"] = len(memories)
                 
             else:  # rrf
                 # RRF 融合
@@ -1398,6 +1413,8 @@ class MemoryManager:
                             'summary': '',
                             'evidence': doc.get('evidence', ''),
                             'metadata': doc.get('metadata', {}),
+                            'start_time': doc.get('start_time'),
+                            'end_time': doc.get('end_time'),
                         }
                     else:
                         # 来自 Milvus 的结果（需要转换字段名）
@@ -1410,6 +1427,8 @@ class MemoryManager:
                         elif data_source == "event_log":
                             content_field = 'atomic_fact'
                         
+                        start_val = doc.get('start_time')
+                        end_val = doc.get('end_time')
                         memory = {
                             'score': rrf_score,
                             'event_id': doc.get('id', ''),  # Milvus 用 'id'
@@ -1421,6 +1440,8 @@ class MemoryManager:
                             'summary': doc.get('metadata', {}).get('summary', '') if isinstance(doc.get('metadata'), dict) else '',
                             'evidence': evidence_field,
                             'metadata': doc.get('metadata', {}) if isinstance(doc.get('metadata'), dict) else {},
+                            'start_time': self._format_datetime_field(start_val),
+                            'end_time': self._format_datetime_field(end_val),
                         }
                     memories.append(memory)
                 
@@ -1429,9 +1450,12 @@ class MemoryManager:
                     "data_source": data_source,
                     "embedding_candidates": embedding_count,
                     "bm25_candidates": bm25_count,
-                    "final_count": len(memories),
                     "total_latency_ms": (time.time() - start_time) * 1000
                 }
+                memories = self._filter_semantic_memories_by_time(
+                    memories, data_source, current_time
+                )
+                metadata["final_count"] = len(memories)
             
             return {
                 "memories": memories,
@@ -1497,6 +1521,54 @@ class MemoryManager:
             "count": len(memories[:top_k]),
             "metadata": metadata,
         }
+
+    @staticmethod
+    def _format_datetime_field(value: Any) -> Optional[str]:
+        if isinstance(value, datetime):
+            return value.isoformat()
+        return value
+
+    @staticmethod
+    def _parse_datetime_value(value: Any) -> Optional[datetime]:
+        if isinstance(value, datetime):
+            return value
+        if isinstance(value, str) and value:
+            try:
+                return datetime.fromisoformat(value)
+            except ValueError:
+                try:
+                    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+                except ValueError:
+                    return None
+        return None
+
+    def _filter_semantic_memories_by_time(
+        self,
+        memories: List[Dict[str, Any]],
+        data_source: str,
+        current_time: Optional[datetime],
+    ) -> List[Dict[str, Any]]:
+        if data_source != "semantic_memory" or not current_time:
+            return memories
+        current_dt = (
+            current_time
+            if isinstance(current_time, datetime)
+            else self._parse_datetime_value(current_time)
+        )
+        if current_dt is None:
+            return memories
+
+        filtered = []
+        for memory in memories:
+            start_dt = self._parse_datetime_value(memory.get("start_time"))
+            end_dt = self._parse_datetime_value(memory.get("end_time"))
+
+            if start_dt and start_dt > current_dt:
+                continue
+            if end_dt and end_dt < current_dt:
+                continue
+            filtered.append(memory)
+        return filtered
     
     # --------- Agentic 检索（LLM 引导的多轮检索）---------
     @trace_logger(operation_name="agentic_layer Agentic检索")

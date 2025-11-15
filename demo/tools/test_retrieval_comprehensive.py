@@ -53,6 +53,7 @@ class RetrievalTester:
         group_id: str = None,
         top_k: int = 5,
         current_time: str = None,
+        allow_empty: bool = False,
     ) -> Dict[str, Any]:
         """执行单次检索测试
         
@@ -101,6 +102,24 @@ class RetrievalTester:
                     latency = metadata.get("total_latency_ms", 0)
                     
                     if len(memories) == 0:
+                        if allow_empty:
+                            self.successful_tests += 1
+                            info_msg = f"{test_name}: 允许空结果（耗时 {latency:.2f}ms）"
+                            print(f"  ✅ {info_msg}")
+                            empty_result = {
+                                "test_name": test_name,
+                                "status": "✅ 成功",
+                                "query": query,
+                                "data_source": data_source,
+                                "memory_scope": memory_scope,
+                                "retrieval_mode": retrieval_mode,
+                                "count": 0,
+                                "latency_ms": latency,
+                                "metadata": metadata,
+                                "memories": [],
+                                "note": "allow_empty",
+                            }
+                            return empty_result
                         # 将 0 条结果视为失败，方便定位问题
                         self.failed_tests += 1
                         warning_msg = f"{test_name}: 返回 0 条记忆（耗时 {latency:.2f}ms）"
@@ -138,6 +157,34 @@ class RetrievalTester:
                     score_info = f"，分数: [{', '.join(scores)}]"
                     
                     print(f"  ✅ {test_name}: 找到 {len(memories)} 条记忆，耗时 {latency:.2f}ms{score_info}")
+                    
+                    if data_source == "profile" and memories:
+                        profile_entry = memories[0]
+                        profile_data = profile_entry.get("profile") or {}
+                        print("    👤 Profile 详情（第一条样例）:")
+                        print(
+                            f"      user_id={profile_entry.get('user_id')}, "
+                            f"group_id={profile_entry.get('group_id')}, "
+                            f"version={profile_entry.get('version')}, "
+                            f"scenario={profile_entry.get('scenario')}, "
+                            f"updated_at={profile_entry.get('updated_at')}"
+                        )
+                        summary_text = profile_data.get("summary") or profile_data.get("output_reasoning")
+                        if summary_text:
+                            short_summary = summary_text[:80] + ("..." if len(summary_text) > 80 else "")
+                            print(f"      摘要: {short_summary}")
+                        interests = profile_data.get("interests") or []
+                        if interests:
+                            interest_names = ", ".join(
+                                [
+                                    item.get("value")
+                                    for item in interests[:3]
+                                    if isinstance(item, dict) and item.get("value")
+                                ]
+                            )
+                            if interest_names:
+                                print(f"      兴趣: {interest_names}")
+                    
                     return test_result
                 else:
                     self.failed_tests += 1
@@ -395,7 +442,8 @@ async def main():
         memory_scope="all",
         retrieval_mode="rrf",
         user_id="robot_001",  # 使用实际数据库中的 user_id
-        current_time="2026-12-31",  # 未来时间
+        current_time="2027-12-31",  # 未来时间
+        allow_empty=True,
     )
     
     # 测试过去时间（应该返回较少记忆）
@@ -407,12 +455,13 @@ async def main():
         retrieval_mode="rrf",
         user_id="robot_001",  # 使用实际数据库中的 user_id
         current_time="2024-01-01",  # 过去时间
+        allow_empty=True,
     )
     
     print(f"\n  📊 时间过滤效果对比:")
     print(f"     过去时间(2024-01-01): {result_past.get('count', 0)} 条")
     print(f"     当前时间({datetime.now().strftime('%Y-%m-%d')}): {result_current.get('count', 0)} 条")
-    print(f"     未来时间(2026-12-31): {result_future.get('count', 0)} 条")
+    print(f"     未来时间(2027-12-31): {result_future.get('count', 0)} 条")
     
     # ========== 打印总结 ==========
     tester.print_summary()

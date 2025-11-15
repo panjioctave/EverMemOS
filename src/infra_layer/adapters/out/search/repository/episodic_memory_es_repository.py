@@ -546,17 +546,7 @@ class EpisodicMemoryEsRepository(BaseRepository[EpisodicMemoryDoc]):
             filter_queries = []
             if user_id is not None:  # 使用 is not None 而不是 truthy 检查，支持空字符串
                 if user_id:  # 非空字符串：个人记忆
-                    # 同时检查 user_id 字段和 participants 数组
-                    user_filter = {
-                        "bool": {
-                            "should": [
-                                {"term": {"user_id": user_id}},
-                                {"term": {"participants": user_id}}
-                            ],
-                            "minimum_should_match": 1
-                        }
-                    }
-                    filter_queries.append(user_filter)
+                    filter_queries.append({"term": {"user_id": user_id}})
                 else:  # 空字符串：群组记忆
                     filter_queries.append({"term": {"user_id": ""}})
             if group_id:

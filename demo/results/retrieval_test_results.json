@@ -1,5 +1,5 @@
 {
-  "test_time": "2025-11-15T13:17:08.337729",
+  "test_time": "2025-11-16T01:35:19.017422",
   "summary": {
     "total_tests": 59,
     "successful_tests": 59,
@@ -15,13 +15,13 @@
       "memory_scope": "all",
       "retrieval_mode": "embedding",
       "count": 3,
-      "latency_ms": 1308.872938156128,
+      "latency_ms": 5808.808088302612,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "episode",
         "embedding_candidates": 3,
-        "final_count": 3,
-        "total_latency_ms": 1308.872938156128
+        "total_latency_ms": 5808.808088302612,
+        "final_count": 3
       },
       "memories": [
         {
@@ -102,13 +102,13 @@
       "memory_scope": "all",
       "retrieval_mode": "bm25",
       "count": 3,
-      "latency_ms": 281.9070816040039,
+      "latency_ms": 32.4249267578125,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "episode",
         "bm25_candidates": 3,
-        "final_count": 3,
-        "total_latency_ms": 281.9070816040039
+        "total_latency_ms": 32.4249267578125,
+        "final_count": 3
       },
       "memories": [
         {
@@ -123,7 +123,9 @@
             "为用户提供北京旅游的景点推荐、特色美食建议以及适合团体娱乐项目的规划。",
             "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至"
           ],
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 20.86273,
@@ -258,7 +260,9 @@
           ],
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 20.184086,
@@ -401,7 +405,9 @@
           ],
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -413,14 +419,14 @@
       "memory_scope": "all",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 595.5290794372559,
+      "latency_ms": 16610.459804534912,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "episode",
         "embedding_candidates": 3,
         "bm25_candidates": 3,
-        "final_count": 5,
-        "total_latency_ms": 595.5290794372559
+        "total_latency_ms": 16610.459804534912,
+        "final_count": 5
       },
       "memories": [
         {
@@ -433,7 +439,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -445,7 +453,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -473,7 +483,9 @@
               "ori_event_id": null,
               "tags": null
             }
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -485,13 +497,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "embedding",
       "count": 1,
-      "latency_ms": 580.1248550415039,
+      "latency_ms": 562.8683567047119,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "episode",
         "embedding_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 580.1248550415039
+        "total_latency_ms": 562.8683567047119,
+        "final_count": 1
       },
       "memories": [
         {
@@ -532,13 +544,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "bm25",
       "count": 1,
-      "latency_ms": 4.564046859741211,
+      "latency_ms": 11.462211608886719,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "episode",
         "bm25_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 4.564046859741211
+        "total_latency_ms": 11.462211608886719,
+        "final_count": 1
       },
       "memories": [
         {
@@ -682,7 +694,9 @@
           ],
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -694,14 +708,14 @@
       "memory_scope": "personal",
       "retrieval_mode": "rrf",
       "count": 2,
-      "latency_ms": 648.8831043243408,
+      "latency_ms": 3851.8218994140625,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "episode",
         "embedding_candidates": 1,
         "bm25_candidates": 1,
-        "final_count": 2,
-        "total_latency_ms": 648.8831043243408
+        "total_latency_ms": 3851.8218994140625,
+        "final_count": 2
       },
       "memories": [
         {
@@ -730,7 +744,9 @@
               "ori_event_id": null,
               "tags": null
             }
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -744,7 +760,9 @@
           "evidence": "",
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -756,13 +774,13 @@
       "memory_scope": "group",
       "retrieval_mode": "embedding",
       "count": 1,
-      "latency_ms": 647.4249362945557,
+      "latency_ms": 9349.64895248413,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "episode",
         "embedding_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 647.4249362945557
+        "total_latency_ms": 9349.64895248413,
+        "final_count": 1
       },
       "memories": [
         {
@@ -787,13 +805,13 @@
       "memory_scope": "group",
       "retrieval_mode": "bm25",
       "count": 1,
-      "latency_ms": 13.676166534423828,
+      "latency_ms": 6.020069122314453,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "episode",
         "bm25_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 13.676166534423828
+        "total_latency_ms": 6.020069122314453,
+        "final_count": 1
       },
       "memories": [
         {
@@ -808,7 +826,9 @@
             "为用户提供北京旅游的景点推荐、特色美食建议以及适合团体娱乐项目的规划。",
             "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至"
           ],
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -820,14 +840,14 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 2,
-      "latency_ms": 583.9412212371826,
+      "latency_ms": 10702.714920043945,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "episode",
         "embedding_candidates": 1,
         "bm25_candidates": 1,
-        "final_count": 2,
-        "total_latency_ms": 583.9412212371826
+        "total_latency_ms": 10702.714920043945,
+        "final_count": 2
       },
       "memories": [
         {
@@ -840,7 +860,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -852,7 +874,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -864,13 +888,13 @@
       "memory_scope": "all",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 592.2329425811768,
+      "latency_ms": 5725.166797637939,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "event_log",
         "embedding_candidates": 52,
-        "final_count": 5,
-        "total_latency_ms": 592.2329425811768
+        "total_latency_ms": 5725.166797637939,
+        "final_count": 5
       },
       "memories": [
         {
@@ -928,13 +952,13 @@
       "memory_scope": "all",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 12.405157089233398,
+      "latency_ms": 11.902809143066406,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "event_log",
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 12.405157089233398
+        "total_latency_ms": 11.902809143066406,
+        "final_count": 5
       },
       "memories": [
         {
@@ -950,7 +974,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.2725267,
@@ -965,7 +991,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.215763,
@@ -980,7 +1008,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant recommended Beijing特色美食 including roast duck, zhajiang noodles, and lǔ zhǔ huǒ shāo."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -992,14 +1022,14 @@
       "memory_scope": "all",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 596.7891216278076,
+      "latency_ms": 1288.98024559021,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "event_log",
         "embedding_candidates": 52,
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 596.7891216278076
+        "total_latency_ms": 1288.98024559021,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1015,7 +1045,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -1030,7 +1062,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -1045,7 +1079,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -1057,13 +1093,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 589.7338390350342,
+      "latency_ms": 819.7040557861328,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "event_log",
         "embedding_candidates": 30,
-        "final_count": 5,
-        "total_latency_ms": 589.7338390350342
+        "total_latency_ms": 819.7040557861328,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1121,13 +1157,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 15.848875045776367,
+      "latency_ms": 11.719942092895508,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "event_log",
         "bm25_candidates": 14,
-        "final_count": 5,
-        "total_latency_ms": 15.848875045776367
+        "total_latency_ms": 11.719942092895508,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1143,7 +1179,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.7196684,
@@ -1158,7 +1196,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant recommended Beijing特色美食 including roast duck, zhajiang noodles, and lǔ zhǔ huǒ shāo."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 5.981198,
@@ -1173,7 +1213,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant refocused on authentic Beijing options including burst belly, lǔ zhǔ huǒ shāo, fried liver, and pepper salt duck rack."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -1185,14 +1227,14 @@
       "memory_scope": "personal",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 586.5030288696289,
+      "latency_ms": 830.4669857025146,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "event_log",
         "embedding_candidates": 30,
         "bm25_candidates": 14,
-        "final_count": 5,
-        "total_latency_ms": 586.5030288696289
+        "total_latency_ms": 830.4669857025146,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1208,7 +1250,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -1223,7 +1267,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -1238,7 +1284,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -1250,13 +1298,13 @@
       "memory_scope": "group",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 590.022087097168,
+      "latency_ms": 822.202205657959,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "event_log",
         "embedding_candidates": 52,
-        "final_count": 5,
-        "total_latency_ms": 590.022087097168
+        "total_latency_ms": 822.202205657959,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1314,13 +1362,13 @@
       "memory_scope": "group",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 16.10589027404785,
+      "latency_ms": 16.91889762878418,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "event_log",
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 16.10589027404785
+        "total_latency_ms": 16.91889762878418,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1336,7 +1384,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.2989936,
@@ -1351,7 +1401,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.24223,
@@ -1366,7 +1418,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant recommended Beijing特色美食 including roast duck, zhajiang noodles, and lǔ zhǔ huǒ shāo."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -1378,14 +1432,14 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 597.7661609649658,
+      "latency_ms": 588.6142253875732,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "event_log",
         "embedding_candidates": 52,
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 597.7661609649658
+        "total_latency_ms": 588.6142253875732,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1401,7 +1455,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -1416,7 +1472,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -1431,7 +1489,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -1443,13 +1503,13 @@
       "memory_scope": "all",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 579.2438983917236,
+      "latency_ms": 630.2797794342041,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "final_count": 5,
-        "total_latency_ms": 579.2438983917236
+        "total_latency_ms": 630.2797794342041,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1513,35 +1573,15 @@
       "memory_scope": "all",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 5.546092987060547,
+      "latency_ms": 13.875246047973633,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "semantic_memory",
-        "bm25_candidates": 15,
-        "final_count": 5,
-        "total_latency_ms": 5.546092987060547
+        "bm25_candidates": 8,
+        "total_latency_ms": 13.875246047973633,
+        "final_count": 5
       },
       "memories": [
-        {
-          "score": 28.493467,
-          "event_id": "69180705192e3b20f7ccfb90",
-          "user_id": "robot_001",
-          "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-          "search_content": [
-            "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-            "作为四川人调整推荐重口味北京美食"
-          ],
-          "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb82",
-            "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
-        },
         {
           "score": 26.068586,
           "event_id": "69180705192e3b20f7ccfb95",
@@ -1560,27 +1600,53 @@
             "end_time": "2026-08-26T00:00:00",
             "duration_days": 365,
             "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
-          "score": 22.375277,
-          "event_id": "69180705192e3b20f7ccfb8a",
-          "user_id": "user_001",
+          "score": 18.787373,
+          "event_id": "69180705192e3b20f7ccfb92",
+          "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-06T00:00:00",
-          "episode": "user_001可能推荐川味火锅店给朋友分享北京体验",
+          "timestamp": "2025-08-26T00:00:00",
+          "episode": "robot_001未来旅游规划中注重交通和天气注意事项",
           "search_content": [
-            "user_001可能推荐川味火锅店给朋友分享北京体验",
-            "喜欢火锅推荐小龙坎和大龙燚"
+            "robot_001未来旅游规划中注重交通和天气注意事项",
+            "提供北京旅游交通提示和天气注意事项"
           ],
           "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb81",
-            "parent_episode_id": "691806ca192e3b20f7ccfb81",
-            "start_time": "2025-09-06T00:00:00",
-            "end_time": "2025-10-06T00:00:00",
-            "duration_days": 30,
-            "evidence": "喜欢火锅推荐小龙坎和大龙燚"
-          }
+            "source_episode_id": "691806ca192e3b20f7ccfb82",
+            "parent_episode_id": "691806ca192e3b20f7ccfb82",
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-02-26T00:00:00",
+            "duration_days": 184,
+            "evidence": "提供北京旅游交通提示和天气注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
+        },
+        {
+          "score": 11.724204,
+          "event_id": "69180705192e3b20f7ccfb8f",
+          "user_id": "robot_001",
+          "group_id": "chat_user_001_assistant",
+          "timestamp": "2025-08-26T00:00:00",
+          "episode": "robot_001在下次出游会提前预约胡同剧本杀等沉浸式体验",
+          "search_content": [
+            "robot_001在下次出游会提前预约胡同剧本杀等沉浸式体验",
+            "推荐胡同沉浸式剧本杀并询问注意事项"
+          ],
+          "metadata": {
+            "source_episode_id": "691806ca192e3b20f7ccfb82",
+            "parent_episode_id": "691806ca192e3b20f7ccfb82",
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2025-11-26T00:00:00",
+            "duration_days": 92,
+            "evidence": "推荐胡同沉浸式剧本杀并询问注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2025-11-26T00:00:00"
         }
       ]
     },
@@ -1592,14 +1658,14 @@
       "memory_scope": "all",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 592.9558277130127,
+      "latency_ms": 569.8099136352539,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "bm25_candidates": 15,
-        "final_count": 5,
-        "total_latency_ms": 592.9558277130127
+        "bm25_candidates": 8,
+        "total_latency_ms": 569.8099136352539,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1617,26 +1683,30 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.01639344262295082,
-          "event_id": "69180705192e3b20f7ccfb90",
+          "event_id": "69180705192e3b20f7ccfb95",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
+          "timestamp": "2025-08-26T00:00:00",
           "subject": "",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
+          "episode": "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
           "summary": "",
           "evidence": "",
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-08-26T00:00:00",
+            "duration_days": 365,
+            "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.016129032258064516,
@@ -1653,7 +1723,9 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb81"
             }
-          }
+          },
+          "start_time": "2025-09-06T00:00:00",
+          "end_time": "2025-12-06T00:00:00"
         }
       ]
     },
@@ -1665,13 +1737,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 582.8850269317627,
+      "latency_ms": 565.2480125427246,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "semantic_memory",
         "embedding_candidates": 6,
-        "final_count": 5,
-        "total_latency_ms": 582.8850269317627
+        "total_latency_ms": 565.2480125427246,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1735,35 +1807,15 @@
       "memory_scope": "personal",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 10.556936264038086,
+      "latency_ms": 9.32931900024414,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "semantic_memory",
-        "bm25_candidates": 9,
-        "final_count": 5,
-        "total_latency_ms": 10.556936264038086
+        "bm25_candidates": 6,
+        "total_latency_ms": 9.32931900024414,
+        "final_count": 5
       },
       "memories": [
-        {
-          "score": 28.997372,
-          "event_id": "69180705192e3b20f7ccfb90",
-          "user_id": "robot_001",
-          "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-          "search_content": [
-            "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-            "作为四川人调整推荐重口味北京美食"
-          ],
-          "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb82",
-            "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
-        },
         {
           "score": 26.652534,
           "event_id": "69180705192e3b20f7ccfb95",
@@ -1782,27 +1834,53 @@
             "end_time": "2026-08-26T00:00:00",
             "duration_days": 365,
             "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
-          "score": 20.016747,
-          "event_id": "69180705192e3b20f7ccfb8d",
+          "score": 19.37132,
+          "event_id": "69180705192e3b20f7ccfb92",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
           "timestamp": "2025-08-26T00:00:00",
-          "episode": "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
+          "episode": "robot_001未来旅游规划中注重交通和天气注意事项",
           "search_content": [
-            "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
-            "用户喜欢火锅并澄清需重口味北京特色美食"
+            "robot_001未来旅游规划中注重交通和天气注意事项",
+            "提供北京旅游交通提示和天气注意事项"
           ],
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "start_time": "2025-08-26T00:00:00",
-            "end_time": "2025-09-26T00:00:00",
-            "duration_days": 31,
-            "evidence": "用户喜欢火锅并澄清需重口味北京特色美食"
-          }
+            "end_time": "2026-02-26T00:00:00",
+            "duration_days": 184,
+            "evidence": "提供北京旅游交通提示和天气注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
+        },
+        {
+          "score": 12.308151,
+          "event_id": "69180705192e3b20f7ccfb8f",
+          "user_id": "robot_001",
+          "group_id": "chat_user_001_assistant",
+          "timestamp": "2025-08-26T00:00:00",
+          "episode": "robot_001在下次出游会提前预约胡同剧本杀等沉浸式体验",
+          "search_content": [
+            "robot_001在下次出游会提前预约胡同剧本杀等沉浸式体验",
+            "推荐胡同沉浸式剧本杀并询问注意事项"
+          ],
+          "metadata": {
+            "source_episode_id": "691806ca192e3b20f7ccfb82",
+            "parent_episode_id": "691806ca192e3b20f7ccfb82",
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2025-11-26T00:00:00",
+            "duration_days": 92,
+            "evidence": "推荐胡同沉浸式剧本杀并询问注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2025-11-26T00:00:00"
         }
       ]
     },
@@ -1814,14 +1892,14 @@
       "memory_scope": "personal",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 634.6158981323242,
+      "latency_ms": 573.8999843597412,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "semantic_memory",
         "embedding_candidates": 6,
-        "bm25_candidates": 9,
-        "final_count": 5,
-        "total_latency_ms": 634.6158981323242
+        "bm25_candidates": 6,
+        "total_latency_ms": 573.8999843597412,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1839,26 +1917,30 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.01639344262295082,
-          "event_id": "69180705192e3b20f7ccfb90",
+          "event_id": "69180705192e3b20f7ccfb95",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
+          "timestamp": "2025-08-26T00:00:00",
           "subject": "",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
+          "episode": "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
           "summary": "",
           "evidence": "",
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-08-26T00:00:00",
+            "duration_days": 365,
+            "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.016129032258064516,
@@ -1875,7 +1957,9 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         }
       ]
     },
@@ -1887,13 +1971,13 @@
       "memory_scope": "group",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 576.6558647155762,
+      "latency_ms": 608.4890365600586,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "final_count": 5,
-        "total_latency_ms": 576.6558647155762
+        "total_latency_ms": 608.4890365600586,
+        "final_count": 5
       },
       "memories": [
         {
@@ -1957,35 +2041,15 @@
       "memory_scope": "group",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 19.222021102905273,
+      "latency_ms": 10.792016983032227,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "semantic_memory",
-        "bm25_candidates": 15,
-        "final_count": 5,
-        "total_latency_ms": 19.222021102905273
+        "bm25_candidates": 8,
+        "total_latency_ms": 10.792016983032227,
+        "final_count": 5
       },
       "memories": [
-        {
-          "score": 28.519934,
-          "event_id": "69180705192e3b20f7ccfb90",
-          "user_id": "robot_001",
-          "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-          "search_content": [
-            "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-            "作为四川人调整推荐重口味北京美食"
-          ],
-          "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb82",
-            "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
-        },
         {
           "score": 26.092999,
           "event_id": "69180705192e3b20f7ccfb95",
@@ -2004,27 +2068,53 @@
             "end_time": "2026-08-26T00:00:00",
             "duration_days": 365,
             "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
-          "score": 22.39793,
-          "event_id": "69180705192e3b20f7ccfb8a",
-          "user_id": "user_001",
+          "score": 18.811785,
+          "event_id": "69180705192e3b20f7ccfb92",
+          "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-06T00:00:00",
-          "episode": "user_001可能推荐川味火锅店给朋友分享北京体验",
+          "timestamp": "2025-08-26T00:00:00",
+          "episode": "robot_001未来旅游规划中注重交通和天气注意事项",
           "search_content": [
-            "user_001可能推荐川味火锅店给朋友分享北京体验",
-            "喜欢火锅推荐小龙坎和大龙燚"
+            "robot_001未来旅游规划中注重交通和天气注意事项",
+            "提供北京旅游交通提示和天气注意事项"
           ],
           "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb81",
-            "parent_episode_id": "691806ca192e3b20f7ccfb81",
-            "start_time": "2025-09-06T00:00:00",
-            "end_time": "2025-10-06T00:00:00",
-            "duration_days": 30,
-            "evidence": "喜欢火锅推荐小龙坎和大龙燚"
-          }
+            "source_episode_id": "691806ca192e3b20f7ccfb82",
+            "parent_episode_id": "691806ca192e3b20f7ccfb82",
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-02-26T00:00:00",
+            "duration_days": 184,
+            "evidence": "提供北京旅游交通提示和天气注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
+        },
+        {
+          "score": 11.748615,
+          "event_id": "69180705192e3b20f7ccfb8f",
+          "user_id": "robot_001",
+          "group_id": "chat_user_001_assistant",
+          "timestamp": "2025-08-26T00:00:00",
+          "episode": "robot_001在下次出游会提前预约胡同剧本杀等沉浸式体验",
+          "search_content": [
+            "robot_001在下次出游会提前预约胡同剧本杀等沉浸式体验",
+            "推荐胡同沉浸式剧本杀并询问注意事项"
+          ],
+          "metadata": {
+            "source_episode_id": "691806ca192e3b20f7ccfb82",
+            "parent_episode_id": "691806ca192e3b20f7ccfb82",
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2025-11-26T00:00:00",
+            "duration_days": 92,
+            "evidence": "推荐胡同沉浸式剧本杀并询问注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2025-11-26T00:00:00"
         }
       ]
     },
@@ -2036,14 +2126,14 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 589.3778800964355,
+      "latency_ms": 1709.1209888458252,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "bm25_candidates": 15,
-        "final_count": 5,
-        "total_latency_ms": 589.3778800964355
+        "bm25_candidates": 8,
+        "total_latency_ms": 1709.1209888458252,
+        "final_count": 5
       },
       "memories": [
         {
@@ -2061,26 +2151,30 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.01639344262295082,
-          "event_id": "69180705192e3b20f7ccfb90",
+          "event_id": "69180705192e3b20f7ccfb95",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
+          "timestamp": "2025-08-26T00:00:00",
           "subject": "",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
+          "episode": "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
           "summary": "",
           "evidence": "",
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-08-26T00:00:00",
+            "duration_days": 365,
+            "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.016129032258064516,
@@ -2097,7 +2191,9 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb81"
             }
-          }
+          },
+          "start_time": "2025-09-06T00:00:00",
+          "end_time": "2025-12-06T00:00:00"
         }
       ]
     },
@@ -2109,12 +2205,12 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 1,
-      "latency_ms": 3.4379959106445312,
+      "latency_ms": 2.86102294921875,
       "metadata": {
         "retrieval_mode": "direct",
         "data_source": "profile",
         "profile_count": 1,
-        "total_latency_ms": 3.4379959106445312
+        "total_latency_ms": 2.86102294921875
       },
       "memories": [
         {
@@ -2259,13 +2355,13 @@
       "memory_scope": "all",
       "retrieval_mode": "embedding",
       "count": 3,
-      "latency_ms": 613.2709980010986,
+      "latency_ms": 821.3980197906494,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "episode",
         "embedding_candidates": 3,
-        "final_count": 3,
-        "total_latency_ms": 613.2709980010986
+        "total_latency_ms": 821.3980197906494,
+        "final_count": 3
       },
       "memories": [
         {
@@ -2346,13 +2442,13 @@
       "memory_scope": "all",
       "retrieval_mode": "bm25",
       "count": 3,
-      "latency_ms": 9.859085083007812,
+      "latency_ms": 12.384891510009766,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "episode",
         "bm25_candidates": 3,
-        "final_count": 3,
-        "total_latency_ms": 9.859085083007812
+        "total_latency_ms": 12.384891510009766,
+        "final_count": 3
       },
       "memories": [
         {
@@ -2367,7 +2463,9 @@
             "为用户提供北京旅游的景点推荐、特色美食建议以及适合团体娱乐项目的规划。",
             "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至"
           ],
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 15.136445,
@@ -2510,7 +2608,9 @@
           ],
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 14.880798,
@@ -2645,7 +2745,9 @@
           ],
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -2657,14 +2759,14 @@
       "memory_scope": "all",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 588.7258052825928,
+      "latency_ms": 603.6899089813232,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "episode",
         "embedding_candidates": 3,
         "bm25_candidates": 3,
-        "final_count": 5,
-        "total_latency_ms": 588.7258052825928
+        "total_latency_ms": 603.6899089813232,
+        "final_count": 5
       },
       "memories": [
         {
@@ -2693,7 +2795,9 @@
               "ori_event_id": null,
               "tags": null
             }
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -2705,7 +2809,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -2717,7 +2823,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -2729,13 +2837,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "embedding",
       "count": 1,
-      "latency_ms": 579.6399116516113,
+      "latency_ms": 551.9049167633057,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "episode",
         "embedding_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 579.6399116516113
+        "total_latency_ms": 551.9049167633057,
+        "final_count": 1
       },
       "memories": [
         {
@@ -2776,13 +2884,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "bm25",
       "count": 1,
-      "latency_ms": 9.902715682983398,
+      "latency_ms": 8.985042572021484,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "episode",
         "bm25_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 9.902715682983398
+        "total_latency_ms": 8.985042572021484,
+        "final_count": 1
       },
       "memories": [
         {
@@ -2926,7 +3034,9 @@
           ],
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -2938,14 +3048,14 @@
       "memory_scope": "personal",
       "retrieval_mode": "rrf",
       "count": 2,
-      "latency_ms": 595.271110534668,
+      "latency_ms": 578.0072212219238,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "episode",
         "embedding_candidates": 1,
         "bm25_candidates": 1,
-        "final_count": 2,
-        "total_latency_ms": 595.271110534668
+        "total_latency_ms": 578.0072212219238,
+        "final_count": 2
       },
       "memories": [
         {
@@ -2974,7 +3084,9 @@
               "ori_event_id": null,
               "tags": null
             }
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -2988,7 +3100,9 @@
           "evidence": "",
           "metadata": {
             "memory_type": "episode_summary"
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3000,13 +3114,13 @@
       "memory_scope": "group",
       "retrieval_mode": "embedding",
       "count": 1,
-      "latency_ms": 586.0028266906738,
+      "latency_ms": 560.1699352264404,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "episode",
         "embedding_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 586.0028266906738
+        "total_latency_ms": 560.1699352264404,
+        "final_count": 1
       },
       "memories": [
         {
@@ -3031,13 +3145,13 @@
       "memory_scope": "group",
       "retrieval_mode": "bm25",
       "count": 1,
-      "latency_ms": 21.023988723754883,
+      "latency_ms": 36.00192070007324,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "episode",
         "bm25_candidates": 1,
-        "final_count": 1,
-        "total_latency_ms": 21.023988723754883
+        "total_latency_ms": 36.00192070007324,
+        "final_count": 1
       },
       "memories": [
         {
@@ -3052,7 +3166,9 @@
             "为用户提供北京旅游的景点推荐、特色美食建议以及适合团体娱乐项目的规划。",
             "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至"
           ],
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3064,14 +3180,14 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 2,
-      "latency_ms": 587.7468585968018,
+      "latency_ms": 566.1897659301758,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "episode",
         "embedding_candidates": 1,
         "bm25_candidates": 1,
-        "final_count": 2,
-        "total_latency_ms": 587.7468585968018
+        "total_latency_ms": 566.1897659301758,
+        "final_count": 2
       },
       "memories": [
         {
@@ -3084,7 +3200,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -3096,7 +3214,9 @@
           "episode": "于2025年8月26日，用户咨询下周即将进行的北京旅游建议，助理提供了故宫、天坛、颐和园、长城、胡同等必游景点推荐，以及烤鸭、炸酱面、卤煮火烧等北京特色美食、交通和实用贴士如预约门票和天气注意事项。用户随后透露自己是四川人，最喜欢火锅，对助理提到的吃的东西感兴趣，要求根据口味推荐美食，助理于是推荐小龙坎老火锅、大龙燚等高水准川味火锅店，以及融合川京风味的涮肉和麻辣烫，并建议簋街等美食区。用户进一步说明实际需要北京特色美食推荐，助理调整为爆肚、卤煮火烧、炸酱面、烤鸭等地道选项，并提供川化吃法如加辣椒油，同时列出推荐店如门框胡同卤煮和姚记炒肝。用户表示将与五六个朋友一起旅行，喜欢大家一起玩的项目，助理推荐胡同沉浸式剧本杀如《北平往事》、什刹海胡同骑行、老北京主题密室逃脱如《末班车》、京味文化体验如德云社听相声，以及夜生活如簋街桌游，并提供团体出行小贴士如提前预约和交通协调。用户确认将尝试胡同沉浸式剧本杀和什刹海胡同骑行，询问注意事项，助理详细说明预约、穿着、时间预留、安全、路线如从什刹海站到鼓楼的骑行路径，以及通用建议如带身份证和零食。整个讨论聚焦于用户团体旅行的趣味性和本地特色体验，直至2025年9月5日，用户从北京返回，报告旅程活动密集、休息不足、饮食不规律导致极度疲惫，并提到第二天需上班，寻求调节建议。",
           "summary": "",
           "evidence": "",
-          "metadata": {}
+          "metadata": {},
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3108,13 +3228,13 @@
       "memory_scope": "all",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 647.9849815368652,
+      "latency_ms": 566.0192966461182,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "event_log",
         "embedding_candidates": 52,
-        "final_count": 5,
-        "total_latency_ms": 647.9849815368652
+        "total_latency_ms": 566.0192966461182,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3172,13 +3292,13 @@
       "memory_scope": "all",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 16.651153564453125,
+      "latency_ms": 8.198738098144531,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "event_log",
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 16.651153564453125
+        "total_latency_ms": 8.198738098144531,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3194,7 +3314,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.29358,
@@ -3209,7 +3331,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.2368164,
@@ -3224,7 +3348,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant recommended Beijing特色美食 including roast duck, zhajiang noodles, and lǔ zhǔ huǒ shāo."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3236,14 +3362,14 @@
       "memory_scope": "all",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 714.533805847168,
+      "latency_ms": 564.255952835083,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "event_log",
         "embedding_candidates": 52,
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 714.533805847168
+        "total_latency_ms": 564.255952835083,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3259,7 +3385,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -3274,7 +3402,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -3289,7 +3419,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3301,13 +3433,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 592.7810668945312,
+      "latency_ms": 568.4399604797363,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "event_log",
         "embedding_candidates": 30,
-        "final_count": 5,
-        "total_latency_ms": 592.7810668945312
+        "total_latency_ms": 568.4399604797363,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3365,13 +3497,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 9.911060333251953,
+      "latency_ms": 8.594989776611328,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "event_log",
         "bm25_candidates": 14,
-        "final_count": 5,
-        "total_latency_ms": 9.911060333251953
+        "total_latency_ms": 8.594989776611328,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3387,7 +3519,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.7196684,
@@ -3402,7 +3536,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant recommended Beijing特色美食 including roast duck, zhajiang noodles, and lǔ zhǔ huǒ shāo."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 5.981198,
@@ -3417,7 +3553,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant refocused on authentic Beijing options including burst belly, lǔ zhǔ huǒ shāo, fried liver, and pepper salt duck rack."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3429,14 +3567,14 @@
       "memory_scope": "personal",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 603.4350395202637,
+      "latency_ms": 606.3070297241211,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "event_log",
         "embedding_candidates": 30,
         "bm25_candidates": 14,
-        "final_count": 5,
-        "total_latency_ms": 603.4350395202637
+        "total_latency_ms": 606.3070297241211,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3452,7 +3590,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -3467,7 +3607,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -3482,7 +3624,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3494,13 +3638,13 @@
       "memory_scope": "group",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 588.554859161377,
+      "latency_ms": 558.3178997039795,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "event_log",
         "embedding_candidates": 52,
-        "final_count": 5,
-        "total_latency_ms": 588.554859161377
+        "total_latency_ms": 558.3178997039795,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3558,13 +3702,13 @@
       "memory_scope": "group",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 18.201112747192383,
+      "latency_ms": 15.620946884155273,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "event_log",
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 18.201112747192383
+        "total_latency_ms": 15.620946884155273,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3580,7 +3724,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.3200474,
@@ -3595,7 +3741,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The user indicated that they will travel with five or six friends."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 6.2632837,
@@ -3610,7 +3758,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "atomic_fact": "The assistant recommended Beijing特色美食 including roast duck, zhajiang noodles, and lǔ zhǔ huǒ shāo."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3622,14 +3772,14 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 601.1221408843994,
+      "latency_ms": 585.6571197509766,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "event_log",
         "embedding_candidates": 52,
         "bm25_candidates": 28,
-        "final_count": 5,
-        "total_latency_ms": 601.1221408843994
+        "total_latency_ms": 585.6571197509766,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3645,7 +3795,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.01639344262295082,
@@ -3660,7 +3812,9 @@
           "metadata": {
             "parent_episode_id": "691806ca192e3b20f7ccfb81",
             "atomic_fact": "The assistant recommended options that fuse Sichuan and Beijing flavors."
-          }
+          },
+          "start_time": null,
+          "end_time": null
         },
         {
           "score": 0.016129032258064516,
@@ -3675,7 +3829,9 @@
           "metadata": {
             "vector_model": "",
             "extend": {}
-          }
+          },
+          "start_time": null,
+          "end_time": null
         }
       ]
     },
@@ -3687,13 +3843,13 @@
       "memory_scope": "all",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 792.802095413208,
+      "latency_ms": 577.4409770965576,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "final_count": 5,
-        "total_latency_ms": 792.802095413208
+        "total_latency_ms": 577.4409770965576,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3757,35 +3913,15 @@
       "memory_scope": "all",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 16.273975372314453,
+      "latency_ms": 11.680126190185547,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "semantic_memory",
-        "bm25_candidates": 16,
-        "final_count": 5,
-        "total_latency_ms": 16.273975372314453
+        "bm25_candidates": 8,
+        "total_latency_ms": 11.680126190185547,
+        "final_count": 5
       },
       "memories": [
-        {
-          "score": 22.416784,
-          "event_id": "69180705192e3b20f7ccfb90",
-          "user_id": "robot_001",
-          "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-          "search_content": [
-            "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-            "作为四川人调整推荐重口味北京美食"
-          ],
-          "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb82",
-            "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
-        },
         {
           "score": 21.809732,
           "event_id": "69180705192e3b20f7ccfb92",
@@ -3804,27 +3940,53 @@
             "end_time": "2026-02-26T00:00:00",
             "duration_days": 184,
             "evidence": "提供北京旅游交通提示和天气注意事项"
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         },
         {
-          "score": 21.179548,
-          "event_id": "69180705192e3b20f7ccfb8d",
+          "score": 19.100666,
+          "event_id": "69180705192e3b20f7ccfb95",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
           "timestamp": "2025-08-26T00:00:00",
-          "episode": "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
+          "episode": "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
           "search_content": [
-            "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
-            "用户喜欢火锅并澄清需重口味北京特色美食"
+            "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
+            "调整推荐爆肚炒肝等浓郁风味北京美食"
           ],
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "start_time": "2025-08-26T00:00:00",
-            "end_time": "2025-09-26T00:00:00",
-            "duration_days": 31,
-            "evidence": "用户喜欢火锅并澄清需重口味北京特色美食"
-          }
+            "end_time": "2026-08-26T00:00:00",
+            "duration_days": 365,
+            "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
+        },
+        {
+          "score": 5.9539037,
+          "event_id": "69180705192e3b20f7ccfb86",
+          "user_id": "user_001",
+          "group_id": "chat_user_001_assistant",
+          "timestamp": "2025-09-06T00:00:00",
+          "episode": "user_001可能养成旅行前咨询实用注意事项的习惯",
+          "search_content": [
+            "user_001可能养成旅行前咨询实用注意事项的习惯",
+            "询问胡同剧本杀和骑行注意事项"
+          ],
+          "metadata": {
+            "source_episode_id": "691806ca192e3b20f7ccfb81",
+            "parent_episode_id": "691806ca192e3b20f7ccfb81",
+            "start_time": "2025-09-06T00:00:00",
+            "end_time": "2026-03-06T00:00:00",
+            "duration_days": 181,
+            "evidence": "询问胡同剧本杀和骑行注意事项"
+          },
+          "start_time": "2025-09-06T00:00:00",
+          "end_time": "2026-03-06T00:00:00"
         }
       ]
     },
@@ -3836,14 +3998,14 @@
       "memory_scope": "all",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 783.9717864990234,
+      "latency_ms": 564.964771270752,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "bm25_candidates": 16,
-        "final_count": 5,
-        "total_latency_ms": 783.9717864990234
+        "bm25_candidates": 8,
+        "total_latency_ms": 564.964771270752,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3861,26 +4023,30 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.01639344262295082,
-          "event_id": "69180705192e3b20f7ccfb90",
+          "event_id": "69180705192e3b20f7ccfb92",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
+          "timestamp": "2025-08-26T00:00:00",
           "subject": "",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
+          "episode": "robot_001未来旅游规划中注重交通和天气注意事项",
           "summary": "",
           "evidence": "",
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-02-26T00:00:00",
+            "duration_days": 184,
+            "evidence": "提供北京旅游交通提示和天气注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         },
         {
           "score": 0.016129032258064516,
@@ -3897,7 +4063,9 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb81"
             }
-          }
+          },
+          "start_time": "2025-09-06T00:00:00",
+          "end_time": "2026-01-06T00:00:00"
         }
       ]
     },
@@ -3909,13 +4077,13 @@
       "memory_scope": "personal",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 580.5461406707764,
+      "latency_ms": 549.3440628051758,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "semantic_memory",
         "embedding_candidates": 6,
-        "final_count": 5,
-        "total_latency_ms": 580.5461406707764
+        "total_latency_ms": 549.3440628051758,
+        "final_count": 5
       },
       "memories": [
         {
@@ -3979,35 +4147,15 @@
       "memory_scope": "personal",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 11.434078216552734,
+      "latency_ms": 9.232759475708008,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "semantic_memory",
-        "bm25_candidates": 9,
-        "final_count": 5,
-        "total_latency_ms": 11.434078216552734
+        "bm25_candidates": 5,
+        "total_latency_ms": 9.232759475708008,
+        "final_count": 5
       },
       "memories": [
-        {
-          "score": 22.899635,
-          "event_id": "69180705192e3b20f7ccfb90",
-          "user_id": "robot_001",
-          "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-          "search_content": [
-            "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-            "作为四川人调整推荐重口味北京美食"
-          ],
-          "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb82",
-            "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
-        },
         {
           "score": 22.374262,
           "event_id": "69180705192e3b20f7ccfb92",
@@ -4026,27 +4174,53 @@
             "end_time": "2026-02-26T00:00:00",
             "duration_days": 184,
             "evidence": "提供北京旅游交通提示和天气注意事项"
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         },
         {
-          "score": 21.6624,
-          "event_id": "69180705192e3b20f7ccfb8d",
+          "score": 19.665195,
+          "event_id": "69180705192e3b20f7ccfb95",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
           "timestamp": "2025-08-26T00:00:00",
-          "episode": "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
+          "episode": "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
           "search_content": [
-            "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
-            "用户喜欢火锅并澄清需重口味北京特色美食"
+            "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
+            "调整推荐爆肚炒肝等浓郁风味北京美食"
           ],
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "start_time": "2025-08-26T00:00:00",
-            "end_time": "2025-09-26T00:00:00",
-            "duration_days": 31,
-            "evidence": "用户喜欢火锅并澄清需重口味北京特色美食"
-          }
+            "end_time": "2026-08-26T00:00:00",
+            "duration_days": 365,
+            "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
+        },
+        {
+          "score": 5.4099708,
+          "event_id": "69180705192e3b20f7ccfb96",
+          "user_id": "robot_001",
+          "group_id": "chat_user_001_assistant",
+          "timestamp": "2025-08-26T00:00:00",
+          "episode": "robot_001旅行决策中会优先考虑6-8人小团体的协调贴士",
+          "search_content": [
+            "robot_001旅行决策中会优先考虑6-8人小团体的协调贴士",
+            "为五六个朋友提供团体协调小贴士"
+          ],
+          "metadata": {
+            "source_episode_id": "691806ca192e3b20f7ccfb82",
+            "parent_episode_id": "691806ca192e3b20f7ccfb82",
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2025-11-26T00:00:00",
+            "duration_days": 92,
+            "evidence": "为五六个朋友提供团体协调小贴士"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2025-11-26T00:00:00"
         }
       ]
     },
@@ -4058,14 +4232,14 @@
       "memory_scope": "personal",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 761.3139152526855,
+      "latency_ms": 566.8151378631592,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "semantic_memory",
         "embedding_candidates": 6,
-        "bm25_candidates": 9,
-        "final_count": 5,
-        "total_latency_ms": 761.3139152526855
+        "bm25_candidates": 5,
+        "total_latency_ms": 566.8151378631592,
+        "final_count": 5
       },
       "memories": [
         {
@@ -4083,26 +4257,30 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.01639344262295082,
-          "event_id": "69180705192e3b20f7ccfb90",
+          "event_id": "69180705192e3b20f7ccfb92",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
+          "timestamp": "2025-08-26T00:00:00",
           "subject": "",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
+          "episode": "robot_001未来旅游规划中注重交通和天气注意事项",
           "summary": "",
           "evidence": "",
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-02-26T00:00:00",
+            "duration_days": 184,
+            "evidence": "提供北京旅游交通提示和天气注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         },
         {
           "score": 0.016129032258064516,
@@ -4119,7 +4297,9 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         }
       ]
     },
@@ -4131,13 +4311,13 @@
       "memory_scope": "group",
       "retrieval_mode": "embedding",
       "count": 5,
-      "latency_ms": 576.6687393188477,
+      "latency_ms": 563.8298988342285,
       "metadata": {
         "retrieval_mode": "embedding",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "final_count": 5,
-        "total_latency_ms": 576.6687393188477
+        "total_latency_ms": 563.8298988342285,
+        "final_count": 5
       },
       "memories": [
         {
@@ -4201,35 +4381,15 @@
       "memory_scope": "group",
       "retrieval_mode": "bm25",
       "count": 5,
-      "latency_ms": 14.812946319580078,
+      "latency_ms": 8.708953857421875,
       "metadata": {
         "retrieval_mode": "bm25",
         "data_source": "semantic_memory",
-        "bm25_candidates": 16,
-        "final_count": 5,
-        "total_latency_ms": 14.812946319580078
+        "bm25_candidates": 8,
+        "total_latency_ms": 8.708953857421875,
+        "final_count": 5
       },
       "memories": [
-        {
-          "score": 22.44325,
-          "event_id": "69180705192e3b20f7ccfb90",
-          "user_id": "robot_001",
-          "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-          "search_content": [
-            "robot_001旅行后可能分享北京地道美食路线给四川朋友",
-            "作为四川人调整推荐重口味北京美食"
-          ],
-          "metadata": {
-            "source_episode_id": "691806ca192e3b20f7ccfb82",
-            "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
-        },
         {
           "score": 21.834145,
           "event_id": "69180705192e3b20f7ccfb92",
@@ -4248,27 +4408,53 @@
             "end_time": "2026-02-26T00:00:00",
             "duration_days": 184,
             "evidence": "提供北京旅游交通提示和天气注意事项"
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         },
         {
-          "score": 21.206015,
-          "event_id": "69180705192e3b20f7ccfb8d",
+          "score": 19.125078,
+          "event_id": "69180705192e3b20f7ccfb95",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
           "timestamp": "2025-08-26T00:00:00",
-          "episode": "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
+          "episode": "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
           "search_content": [
-            "robot_001未来旅行中会优先选择重口味北京小吃如爆肚和卤煮",
-            "用户喜欢火锅并澄清需重口味北京特色美食"
+            "robot_001会探索更多城市特色美食以匹配个人重口味偏好",
+            "调整推荐爆肚炒肝等浓郁风味北京美食"
           ],
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
             "start_time": "2025-08-26T00:00:00",
-            "end_time": "2025-09-26T00:00:00",
-            "duration_days": 31,
-            "evidence": "用户喜欢火锅并澄清需重口味北京特色美食"
-          }
+            "end_time": "2026-08-26T00:00:00",
+            "duration_days": 365,
+            "evidence": "调整推荐爆肚炒肝等浓郁风味北京美食"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
+        },
+        {
+          "score": 5.976556,
+          "event_id": "69180705192e3b20f7ccfb86",
+          "user_id": "user_001",
+          "group_id": "chat_user_001_assistant",
+          "timestamp": "2025-09-06T00:00:00",
+          "episode": "user_001可能养成旅行前咨询实用注意事项的习惯",
+          "search_content": [
+            "user_001可能养成旅行前咨询实用注意事项的习惯",
+            "询问胡同剧本杀和骑行注意事项"
+          ],
+          "metadata": {
+            "source_episode_id": "691806ca192e3b20f7ccfb81",
+            "parent_episode_id": "691806ca192e3b20f7ccfb81",
+            "start_time": "2025-09-06T00:00:00",
+            "end_time": "2026-03-06T00:00:00",
+            "duration_days": 181,
+            "evidence": "询问胡同剧本杀和骑行注意事项"
+          },
+          "start_time": "2025-09-06T00:00:00",
+          "end_time": "2026-03-06T00:00:00"
         }
       ]
     },
@@ -4280,14 +4466,14 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 5,
-      "latency_ms": 585.7539176940918,
+      "latency_ms": 583.3323001861572,
       "metadata": {
         "retrieval_mode": "rrf",
         "data_source": "semantic_memory",
         "embedding_candidates": 10,
-        "bm25_candidates": 16,
-        "final_count": 5,
-        "total_latency_ms": 585.7539176940918
+        "bm25_candidates": 8,
+        "total_latency_ms": 583.3323001861572,
+        "final_count": 5
       },
       "memories": [
         {
@@ -4305,26 +4491,30 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb82"
             }
-          }
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-08-26T00:00:00"
         },
         {
           "score": 0.01639344262295082,
-          "event_id": "69180705192e3b20f7ccfb90",
+          "event_id": "69180705192e3b20f7ccfb92",
           "user_id": "robot_001",
           "group_id": "chat_user_001_assistant",
-          "timestamp": "2025-09-01T00:00:00",
+          "timestamp": "2025-08-26T00:00:00",
           "subject": "",
-          "episode": "robot_001旅行后可能分享北京地道美食路线给四川朋友",
+          "episode": "robot_001未来旅游规划中注重交通和天气注意事项",
           "summary": "",
           "evidence": "",
           "metadata": {
             "source_episode_id": "691806ca192e3b20f7ccfb82",
             "parent_episode_id": "691806ca192e3b20f7ccfb82",
-            "start_time": "2025-09-01T00:00:00",
-            "end_time": "2025-09-15T00:00:00",
-            "duration_days": 14,
-            "evidence": "作为四川人调整推荐重口味北京美食"
-          }
+            "start_time": "2025-08-26T00:00:00",
+            "end_time": "2026-02-26T00:00:00",
+            "duration_days": 184,
+            "evidence": "提供北京旅游交通提示和天气注意事项"
+          },
+          "start_time": "2025-08-26T00:00:00",
+          "end_time": "2026-02-26T00:00:00"
         },
         {
           "score": 0.016129032258064516,
@@ -4341,7 +4531,9 @@
             "extend": {
               "source_episode_id": "691806ca192e3b20f7ccfb81"
             }
-          }
+          },
+          "start_time": "2025-09-06T00:00:00",
+          "end_time": "2026-01-06T00:00:00"
         }
       ]
     },
@@ -4353,12 +4545,12 @@
       "memory_scope": "group",
       "retrieval_mode": "rrf",
       "count": 1,
-      "latency_ms": 4.475116729736328,
+      "latency_ms": 2.7315616607666016,
       "metadata": {
         "retrieval_mode": "direct",
         "data_source": "profile",
         "profile_count": 1,
-        "total_latency_ms": 4.475116729736328
+        "total_latency_ms": 2.7315616607666016
       },
       "memories": [
         {
