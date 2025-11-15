@@ -230,7 +230,7 @@ memsys-opensource/
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/your-org/memsys_opensource.git
+git clone https://github.com/EverMind-AI/EverMemOS.git
 cd memsys_opensource
 
 # 2. 启动 Docker 服务
@@ -451,6 +451,78 @@ curl -X POST http://localhost:1995/api/v3/agentic/memorize \
 - **`/api/v3/agentic/retrieve_agentic`**: Agentic 记忆检索（LLM 引导的多轮智能检索）
 
 更多 API 详情请参考 [Agentic V3 API 文档](docs/api_docs/agentic_v3_api_zh.md)。
+
+---
+
+**🔍 检索记忆**
+
+EverMemOS 提供两种检索模式：**轻量级检索**（快速）和 **Agentic 检索**（智能）。
+
+**轻量级检索**
+
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| `query` | 是* | 自然语言查询（*profile 数据源时可选） |
+| `user_id` | 否 | 用户 ID |
+| `data_source` | 是 | `episode` / `event_log` / `semantic_memory` / `profile` |
+| `memory_scope` | 是 | `personal`（仅 user_id） / `group`（仅 group_id） / `all`（两者） |
+| `retrieval_mode` | 是 | `embedding` / `bm25` / `rrf`（推荐） |
+| `group_id` | 否 | 群组 ID |
+| `current_time` | 否 | 过滤有效期内的 semantic_memory（格式: YYYY-MM-DD） |
+| `top_k` | 否 | 返回结果数（默认: 5） |
+
+**示例 1：个人记忆**
+
+```bash
+curl -X POST http://localhost:8001/api/v3/agentic/retrieve_lightweight \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "用户喜欢什么运动",
+    "user_id": "user_001",
+    "data_source": "episode",
+    "memory_scope": "personal",
+    "retrieval_mode": "rrf"
+  }'
+```
+
+**示例 2：群组记忆**
+
+```bash
+curl -X POST http://localhost:8001/api/v3/agentic/retrieve_lightweight \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "讨论项目进展",
+    "group_id": "project_team_001",
+    "data_source": "episode",
+    "memory_scope": "group",
+    "retrieval_mode": "rrf"
+  }'
+```
+
+---
+
+**Agentic 检索**
+
+使用 LLM 引导的多轮智能搜索，自动进行查询改进和结果重排序。
+
+```bash
+curl -X POST http://localhost:8001/api/v3/agentic/retrieve_agentic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "用户可能喜欢吃什么？",
+    "user_id": "user_001",
+    "group_id": "chat_group_001",
+    "top_k": 20,
+    "llm_config": {
+      "model": "gpt-4o-mini",
+      "api_key": "your_api_key"
+    }
+  }'
+```
+
+> ⚠️ Agentic 检索需要 LLM API Key，耗时较长，但能为需要多记忆来源、复杂逻辑查询提供更高质量的结果。
+
+> 📖 完整文档：[Agentic V3 API](docs/api_docs/agentic_v3_api_zh.md) | 测试工具：`demo/tools/test_retrieval_comprehensive.py`
 
 ---
 

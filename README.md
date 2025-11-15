@@ -229,7 +229,7 @@ Use Docker Compose to start all dependency services (MongoDB, Elasticsearch, Mil
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/memsys_opensource.git
+git clone https://github.com/EverMind-AI/EverMemOS.git
 cd memsys_opensource
 
 # 2. Start Docker services
@@ -456,6 +456,78 @@ curl -X POST http://localhost:1995/api/v3/agentic/memorize \
 - **`/api/v3/agentic/retrieve_agentic`**: Agentic memory retrieval (LLM-guided multi-round intelligent retrieval)
 
 For more API details, please refer to [Agentic V3 API Documentation](docs/api_docs/agentic_v3_api.md).
+
+---
+
+**🔍 Retrieve Memories**
+
+EverMemOS provides two retrieval modes: **Lightweight** (fast) and **Agentic** (intelligent).
+
+**Lightweight Retrieval**
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `query` | Yes* | Natural language query (*optional for profile data source) |
+| `user_id` | No | User ID |
+| `data_source` | Yes | `episode` / `event_log` / `semantic_memory` / `profile` |
+| `memory_scope` | Yes | `personal` (user_id only) / `group` (group_id only) / `all` (both) |
+| `retrieval_mode` | Yes | `embedding` / `bm25` / `rrf` (recommended) |
+| `group_id` | No | Group ID |
+| `current_time` | No | Filter valid semantic_memory (format: YYYY-MM-DD) |
+| `top_k` | No | Number of results (default: 5) |
+
+**Example 1: Personal Memory**
+
+```bash
+curl -X POST http://localhost:8001/api/v3/agentic/retrieve_lightweight \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What sports does the user like?",
+    "user_id": "user_001",
+    "data_source": "episode",
+    "memory_scope": "personal",
+    "retrieval_mode": "rrf"
+  }'
+```
+
+**Example 2: Group Memory**
+
+```bash
+curl -X POST http://localhost:8001/api/v3/agentic/retrieve_lightweight \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Discuss project progress",
+    "group_id": "project_team_001",
+    "data_source": "episode",
+    "memory_scope": "group",
+    "retrieval_mode": "rrf"
+  }'
+```
+
+---
+
+**Agentic Retrieval**
+
+LLM-guided multi-round intelligent search with automatic query refinement and result reranking.
+
+```bash
+curl -X POST http://localhost:8001/api/v3/agentic/retrieve_agentic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What foods might the user like?",
+    "user_id": "user_001",
+    "group_id": "chat_group_001",
+    "top_k": 20,
+    "llm_config": {
+      "model": "gpt-4o-mini",
+      "api_key": "your_api_key"
+    }
+  }'
+```
+
+> ⚠️ Agentic retrieval requires LLM API key and takes longer, but provides higher quality results for queries requiring multiple memory sources and complex logic.
+
+> 📖 Full Documentation: [Agentic V3 API](docs/api_docs/agentic_v3_api.md) | Testing Tool: `demo/tools/test_retrieval_comprehensive.py`
 
 ---
 
