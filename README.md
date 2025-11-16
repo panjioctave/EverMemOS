@@ -5,6 +5,9 @@
   EverMemOS
 </h1>
 
+ <p><a href="https://evermind-ai.com/" target="_blank" style="color: #4A90E2; text-decoration: none; font-weight: 500;">https://evermind-ai.com/</a></p>
+
+
 <p><strong>Let every interaction be driven by understanding.</strong> · Enterprise-Grade Intelligent Memory System</p>
 
 <p>

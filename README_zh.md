@@ -1,11 +1,16 @@
 <div align="center">
 
-<h1>
-  <img src="figs/logo.png" alt="EverMemOS Logo" height="40" style="vertical-align: middle; margin-right: 12px;"/>
-  EverMemOS
-</h1>
+  <h1>
+    <img src="figs/logo.png" alt="EverMemOS Logo" height="40" style="vertical-align: middle; margin-right: 12px;"/>
+    EverMemOS
+  </h1>
+  
+   <p><a href="https://evermind-ai.com/" target="_blank" style="color: #4A90E2; text-decoration: none; font-weight: 500;">https://evermind-ai.com/</a></p>
 
-<p><strong>每次交流，都由理解驱动</strong> · 企业级智能记忆系统</p>
+  
+  <p><strong>每次交流，都由理解驱动</strong> · 企业级智能记忆系统</p>
+
+
 
 <p>
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-0084FF?style=flat-square&logo=python&logoColor=white" />
@@ -22,7 +27,7 @@
 </p>
 
 <p>
-  <a href="README.md">English</a> | <a href="README_zh.md">简体中文</a> | <a href="https://evermind-ai.com/">官网</a>
+  <a href="README.md">English</a> | <a href="README_zh.md">简体中文</a> 
 </p>
 
 </div>
