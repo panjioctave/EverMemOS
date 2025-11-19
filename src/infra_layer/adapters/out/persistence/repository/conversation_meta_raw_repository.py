@@ -16,6 +16,9 @@ from infra_layer.adapters.out.persistence.document.memory.conversation_meta impo
 
 logger = logging.getLogger(__name__)
 
+# 允许的 scene 枚举值
+ALLOWED_SCENES = ["assistant", "companion"]
+
 
 @repository("conversation_meta_raw_repository", primary=True)
 class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
@@ -28,6 +31,23 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
     def __init__(self):
         """初始化仓储"""
         super().__init__(ConversationMeta)
+
+    def _validate_scene(self, scene: str) -> bool:
+        """
+        验证 scene 是否合法
+
+        Args:
+            scene: 场景标识
+
+        Returns:
+            bool: 合法返回 True，不合法返回 False
+        """
+        if scene not in ALLOWED_SCENES:
+            logger.warning(
+                "❌ 不合法的 scene 值: %s, 允许的值: %s", scene, ALLOWED_SCENES
+            )
+            return False
+        return True
 
     async def get_by_group_id(
         self, group_id: str, session: Optional[AsyncIOMotorClientSession] = None
@@ -73,6 +93,15 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
             对话元数据列表
         """
         try:
+            # 验证 scene 字段
+            if not self._validate_scene(scene):
+                logger.warning(
+                    "❌ 查询对话元数据列表时 scene 值不合法: %s, 允许的值: %s",
+                    scene,
+                    ALLOWED_SCENES,
+                )
+                return []
+
             query = self.model.find({"scene": scene}, session=session)
             if skip:
                 query = query.skip(skip)
@@ -80,7 +109,11 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
                 query = query.limit(limit)
 
             result = await query.to_list()
-            logger.debug("✅ 根据场景获取对话元数据列表成功: scene=%s, count=%d", scene, len(result))
+            logger.debug(
+                "✅ 根据场景获取对话元数据列表成功: scene=%s, count=%d",
+                scene,
+                len(result),
+            )
             return result
         except Exception as e:
             logger.error("❌ 根据场景获取对话元数据列表失败: %s", e)
@@ -102,6 +135,15 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
             创建的对话元数据对象或 None
         """
         try:
+            # 验证 scene 字段
+            if not self._validate_scene(conversation_meta.scene):
+                logger.error(
+                    "❌ 创建对话元数据失败: scene 值不合法: %s, 允许的值: %s",
+                    conversation_meta.scene,
+                    ALLOWED_SCENES,
+                )
+                return None
+
             await conversation_meta.insert(session=session)
             logger.info(
                 "✅ 创建对话元数据成功: group_id=%s, scene=%s",
@@ -131,6 +173,17 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
             更新后的对话元数据对象或 None
         """
         try:
+            # 如果更新数据中包含 scene，先验证
+            if "scene" in update_data and not self._validate_scene(
+                update_data["scene"]
+            ):
+                logger.error(
+                    "❌ 更新对话元数据失败: scene 值不合法: %s, 允许的值: %s",
+                    update_data["scene"],
+                    ALLOWED_SCENES,
+                )
+                return None
+
             conversation_meta = await self.get_by_group_id(group_id, session=session)
             if conversation_meta:
                 for key, value in update_data.items():
@@ -164,6 +217,17 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
             更新或创建的对话元数据对象
         """
         try:
+            # 如果数据中包含 scene，先验证
+            if "scene" in conversation_data and not self._validate_scene(
+                conversation_data["scene"]
+            ):
+                logger.error(
+                    "❌ Upsert 对话元数据失败: scene 值不合法: %s, 允许的值: %s",
+                    conversation_data["scene"],
+                    ALLOWED_SCENES,
+                )
+                return None
+
             # 1. 首先尝试查找现有记录
             existing_doc = await self.model.find_one(
                 {"group_id": group_id}, session=session
@@ -216,4 +280,3 @@ class ConversationMetaRawRepository(BaseRepository[ConversationMeta]):
         except Exception as e:
             logger.error("❌ 删除对话元数据失败: %s", e)
             return False
-

@@ -40,6 +40,9 @@ from infra_layer.adapters.out.persistence.repository.personal_event_log_raw_repo
 from infra_layer.adapters.out.persistence.repository.conversation_status_raw_repository import (
     ConversationStatusRawRepository,
 )
+from infra_layer.adapters.out.persistence.repository.conversation_meta_raw_repository import (
+    ConversationMetaRawRepository,
+)
 from infra_layer.adapters.out.persistence.repository.core_memory_raw_repository import (
     CoreMemoryRawRepository,
 )
@@ -904,7 +907,23 @@ async def memorize(request: MemorizeRequest) -> List[Memory]:
 
     # 同步触发聚类（等待完成，确保 Profile 提取成功）
     if request.group_id:
-        await _trigger_clustering(request.group_id, memcell, request.scene)
+        # 从 conversation_meta_raw_repository 获取 scene
+        conversation_meta_repo = get_bean_by_type(ConversationMetaRawRepository)
+        conversation_meta = await conversation_meta_repo.get_by_group_id(
+            request.group_id
+        )
+
+        # 如果找到 conversation_meta，使用其中的 scene；否则使用默认值 "assistant"
+        if conversation_meta and conversation_meta.scene:
+            scene = conversation_meta.scene
+            logger.info(f"[mem_memorize] 从 conversation_meta 获取 scene: {scene}")
+        else:
+            scene = "assistant"  # 默认场景，可选值: ["assistant", "companion"]
+            logger.warning(
+                f"[mem_memorize] 未找到 conversation_meta 或 scene 为空，使用默认 scene: {scene}"
+            )
+
+        await _trigger_clustering(request.group_id, memcell, scene)
 
     # 读取记忆的流程
     participants = []

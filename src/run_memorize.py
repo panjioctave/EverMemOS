@@ -20,7 +20,8 @@ import time
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-ALLOWED_SCENES: tuple[str, str] = ("assistant", "group_chat")
+ALLOWED_SCENES: tuple[str, str] = ("assistant", "companion")
+# todo xinzegao 这里原来是 group_chat
 
 from infra_layer.adapters.input.api.mapper.group_chat_converter import (
     validate_group_chat_format_input,
@@ -33,14 +34,16 @@ logger = get_logger(__name__)
 class GroupChatMemorizer:
     """群聊记忆存储处理类"""
 
-    def __init__(self, api_url: str):
+    def __init__(self, api_url: str, scene: str = "assistant"):
         """
         初始化
 
         Args:
             api_url: memorize API地址（必需）
+            scene: 记忆提取场景（默认 "assistant"）
         """
         self.api_url = api_url
+        self.scene = scene
 
     def validate_input_file(self, file_path: str) -> bool:
         """
@@ -129,6 +132,57 @@ class GroupChatMemorizer:
             logger.info(f"消息数量: {len(messages)}")
             logger.info(f"API地址: {self.api_url}")
 
+            # ========== 第一步：先调用 conversation-meta 接口保存 scene ==========
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                logger.info("\n--- 保存对话元数据 (conversation-meta) ---")
+
+                # 构建 conversation-meta 请求数据
+                conversation_meta_request = {
+                    "version": group_chat_data.get("version", "1.0.0"),
+                    "scene": self.scene,  # 使用命令行传入的 scene
+                    "scene_desc": meta.get("scene_desc", {}),
+                    "name": meta.get("name", "未命名对话"),
+                    "description": meta.get("description", ""),
+                    "group_id": group_id,
+                    "created_at": meta.get("created_at", ""),
+                    "default_timezone": meta.get("default_timezone", "Asia/Shanghai"),
+                    "user_details": meta.get("user_details", {}),
+                    "tags": meta.get("tags", []),
+                }
+
+                # 获取 conversation-meta API 地址（在 memorize API 的基础上构建）
+                # 假设 memorize API 是 http://host:port/api/v3/agentic/memorize
+                # 则 conversation-meta API 是 http://host:port/api/v3/agentic/conversation-meta
+                base_url = self.api_url.rsplit('/', 1)[0]  # 移除最后的 /memorize
+                conversation_meta_url = f"{base_url}/conversation-meta"
+
+                logger.info(f"正在保存对话元数据到: {conversation_meta_url}")
+                logger.info(f"Scene: {self.scene}, Group ID: {group_id}")
+
+                try:
+                    response = await client.post(
+                        conversation_meta_url,
+                        json=conversation_meta_request,
+                        headers={"Content-Type": "application/json"},
+                    )
+
+                    if response.status_code == 200:
+                        result = response.json()
+                        logger.info(f"  ✓ 对话元数据保存成功")
+                        logger.info(f"  Scene: {self.scene}")
+                    else:
+                        logger.warning(
+                            f"  ⚠ 对话元数据保存失败: {response.status_code}"
+                        )
+                        logger.warning(f"  响应内容: {response.text}")
+                        logger.warning(f"  继续处理消息...")
+
+                except Exception as e:
+                    logger.warning(f"  ⚠ 保存对话元数据时出错: {e}")
+                    logger.warning(f"  继续处理消息...")
+
+            # ========== 第二步：逐条处理消息 ==========
+
             total_memories = 0
             success_count = 0
 
@@ -151,9 +205,9 @@ class GroupChatMemorizer:
                         request_data["group_id"] = group_id
                     if group_name:
                         request_data["group_name"] = group_name
+                    # 从消息中获取 scene，如果没有则使用默认值
                     scene = message.get("scene") or self.scene
-                    if scene:
-                        request_data["scene"] = scene
+                    request_data["scene"] = scene
 
                     # 发送请求
                     try:
@@ -275,7 +329,10 @@ async def async_main():
         type=str,
         choices=ALLOWED_SCENES,
         required=True,
-        help='记忆提取场景（必填，仅支持 assistant 或 group_chat）',
+        help='记忆提取场景（必填，仅支持 assistant 或 companion）',
+    )
+    parser.add_argument(
+        '--validate-only', action='store_true', help='仅验证输入文件格式，不调用 API'
     )
 
     args = parser.parse_args()
@@ -301,7 +358,7 @@ async def async_main():
     # 如果只是验证模式，验证后退出
     if args.validate_only:
         # 验证模式不需要 API 地址
-        memorizer = GroupChatMemorizer(api_url="")  # 传入空字符串占位
+        memorizer = GroupChatMemorizer(api_url="", scene=args.scene)  # 传入空字符串占位
         success = memorizer.validate_input_file(str(input_file))
         if success:
             logger.info("\n✓ 验证完成，文件格式正确！")
@@ -321,7 +378,7 @@ async def async_main():
         sys.exit(1)
 
     # 创建处理器并处理文件
-    memorizer = GroupChatMemorizer(api_url=args.api_url)
+    memorizer = GroupChatMemorizer(api_url=args.api_url, scene=args.scene)
     success = await memorizer.process_file(str(input_file))
 
     if success:
