@@ -108,7 +108,7 @@
               "691806af192e3b20f7ccfb7d"
             ],
             "extend": {
-              "memory_type": "episode_summary",
+              "memory_type": "episode_memory",
               "ori_event_id": null,
               "tags": null
             }
@@ -187,7 +187,7 @@
               "691806af192e3b20f7ccfb7d"
             ],
             "extend": {
-              "memory_type": "episode_summary",
+              "memory_type": "episode_memory",
               "ori_event_id": null,
               "tags": null
             }
@@ -206,7 +206,7 @@
           "summary": "",
           "evidence": "",
           "metadata": {
-            "memory_type": "episode_summary"
+            "memory_type": "episode_memory"
           },
           "start_time": null,
           "end_time": null
@@ -328,7 +328,7 @@
               "691806af192e3b20f7ccfb7d"
             ],
             "extend": {
-              "memory_type": "episode_summary",
+              "memory_type": "episode_memory",
               "ori_event_id": null,
               "tags": null
             }
@@ -428,7 +428,7 @@
           "summary": "",
           "evidence": "",
           "metadata": {
-            "memory_type": "episode_summary"
+            "memory_type": "episode_memory"
           },
           "start_time": null,
           "end_time": null

@@ -232,13 +232,13 @@ def get_group_semantic_generation_prompt(
 
 
 def get_semantic_generation_prompt(
-    episode_summary: str, episode_content: str, user_id: str = None
+    episode_memory: str, episode_content: str, user_id: str = None
 ) -> str:
     """
     Generate prompt for personal semantic memory association prediction
 
     Args:
-        episode_summary: EpisodeMemory summary content
+        episode_memory: EpisodeMemory summary content
         episode_content: EpisodeMemory detailed content
         user_id: User ID for generating specific user ID
 
@@ -255,7 +255,7 @@ def get_semantic_generation_prompt(
 ## Input Content:
 
 **EpisodeMemory Summary:**
-{episode_summary}
+{episode_memory}
 
 **EpisodeMemory Detailed Content:**
 {episode_content}{user_id_info}
@@ -263,4 +263,3 @@ def get_semantic_generation_prompt(
 
 """
     return prompt
-

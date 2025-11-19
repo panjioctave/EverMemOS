@@ -5,19 +5,18 @@
 ## 📋 目录
 
 - [API 概览](#api-概览)
-- [V3 API 接口](#v3-api-接口)
+- [Memorize API 接口](#memorize-api-接口)
 - [群聊数据格式](#群聊数据格式)
 - [使用脚本存储记忆](#使用脚本存储记忆)
 - [API 调用示例](#api-调用示例)
 
 ## 🔍 API 概览
 
-MemSys 提供了多个版本的 API 接口：
+MemSys 提供标准化的 API 接口：
 
-- **V3 API（推荐）**: 简单直接的单条消息格式，适合逐条处理
-- **V2 API（兼容）**: 支持批量消息处理，需要先转换数据格式
+- **Memorize API**: 简单直接的单条消息格式，适合逐条处理
 
-## 🚀 V3 API 接口
+## 🚀 Memorize API 接口
 
 ### 接口地址
 
@@ -27,7 +26,7 @@ POST /api/v3/agentic/memorize
 
 ### 请求格式
 
-V3 接口使用简单直接的单条消息格式：
+使用简单直接的单条消息格式：
 
 ```json
 {
@@ -222,12 +221,11 @@ uv run python src/bootstrap.py src/run_memorize.py \
 |------|------|------|
 | `--input` | 是 | 输入的群聊 JSON 文件路径（GroupChatFormat 格式） |
 | `--api-url` | 否* | memorize API 地址（*除非使用 --validate-only） |
-| `--use-v2` | 否 | 使用 V2 接口（默认使用 V3 接口） |
 | `--validate-only` | 否 | 仅验证输入文件格式，不执行存储 |
 
 ### 使用示例
 
-#### 1. 使用 V3 接口存储（推荐）
+#### 1. 存储记忆
 
 ```bash
 # 基本用法
@@ -246,16 +244,7 @@ uv run python src/bootstrap.py src/run_memorize.py \
   --api-url http://api.example.com/api/v3/agentic/memorize
 ```
 
-#### 2. 使用 V2 接口（兼容模式）
-
-```bash
-uv run python src/bootstrap.py src/run_memorize.py \
-  --input data/group_chat.json \
-  --api-url http://localhost:1995/api/v2/agentic/memorize \
-  --use-v2
-```
-
-#### 3. 验证文件格式
+#### 2. 验证文件格式
 
 在存储前验证文件格式是否正确：
 
@@ -290,7 +279,6 @@ uv run python src/bootstrap.py src/run_memorize.py \
 📄 输入文件: /path/to/data/group_chat.json
 🔍 验证模式: 否
 🌐 API地址: http://localhost:1995/api/v3/agentic/memorize
-📡 接口模式: V3 (推荐，简单直接格式)
 ======================================================================
 
 ======================================================================
@@ -309,7 +297,7 @@ uv run python src/bootstrap.py src/run_memorize.py \
 时间范围: 2025-02-01T10:00:00+08:00 ~ 2025-02-01T18:30:00+08:00
 
 ======================================================================
-开始逐条调用 V3 memorize API
+开始逐条调用 memorize API
 ======================================================================
 群组名称: 项目讨论组
 群组ID: group_001
@@ -454,8 +442,7 @@ uv run python src/bootstrap.py src/run_memorize.py \
 ## 🔗 相关文档
 
 - [群聊格式规范](../../data_format/group_chat/group_chat_format.md) - GroupChatFormat 详细说明
-- [Agentic V3 API](../api_docs/agentic_v3_api.md) - V3 API 完整文档
-- [Agentic V2 API](../api_docs/agentic_v2_api.md) - V2 API 完整文档
+- [Agentic API 文档](../api_docs/agentic_v3_api_zh.md) - API 完整文档
 - [快速开始指南](getting_started.md) - 环境搭建和服务启动
 
 ## 💡 最佳实践

@@ -185,23 +185,13 @@ class AgenticV3Controller(BaseController):
             message_data = await fastapi_request.json()
             logger.info("收到 V3 memorize 请求（单条消息）")
 
-            # 2. 保存原始消息到 Redis（用于历史累积）
-            group_id = message_data.get("group_id")
-            if group_id:
-                redis_key = f"chat_history:{group_id}"
-
-                # 将消息保存到 Redis List（左侧推入，保持时间顺序）
-                await self.redis_provider.lpush(redis_key, json.dumps(message_data))
-                # 设置过期时间为 24 小时
-                await self.redis_provider.expire(redis_key, 86400)
-                logger.debug("消息已保存到 Redis: group_id=%s", group_id)
-
             # 3. 使用 group_chat_converter 转换为内部格式
             logger.info("开始转换简单消息格式到内部格式")
             memorize_input = convert_simple_message_to_memorize_input(message_data)
 
             # 提取元信息用于日志
             group_name = memorize_input.get("group_name")
+            group_id = memorize_input.get("group_id")
 
             logger.info("转换完成: group_id=%s, group_name=%s", group_id, group_name)
 

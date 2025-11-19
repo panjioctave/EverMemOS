@@ -50,8 +50,8 @@ class EpisodeMemory(Memory):
     event_id: str = field(default=None)
 
     def __post_init__(self):
-        """Set memory_type to EPISODE_SUMMARY and call parent __post_init__."""
-        self.memory_type = MemoryType.EPISODE_SUMMARY
+        """Set memory_type to EPISODE_MEMORY and call parent __post_init__."""
+        self.memory_type = MemoryType.EPISODE_MEMORY
         super().__post_init__()
 
 
@@ -61,8 +61,10 @@ class EpisodeMemoryExtractRequest(MemoryExtractRequest):
 
 
 class EpisodeMemoryExtractor(MemoryExtractor):
-    def __init__(self, llm_provider: LLMProvider | None = None, use_eval_prompts: bool = False):
-        super().__init__(MemoryType.EPISODE_SUMMARY)
+    def __init__(
+        self, llm_provider: LLMProvider | None = None, use_eval_prompts: bool = False
+    ):
+        super().__init__(MemoryType.EPISODE_MEMORY)
         self.llm_provider = llm_provider
         self.semantic_extractor = SemanticMemoryExtractor(self.llm_provider)
         self.use_eval_prompts = use_eval_prompts
@@ -361,7 +363,9 @@ class EpisodeMemoryExtractor(MemoryExtractor):
                     else:
                         # 尝试匹配包含title和content的JSON对象
                         json_match = re.search(
-                            r'\{[^{}]*"title"[^{}]*"content"[^{}]*\}', response, re.DOTALL
+                            r'\{[^{}]*"title"[^{}]*"content"[^{}]*\}',
+                            response,
+                            re.DOTALL,
                         )
                         if json_match:
                             data = json.loads(json_match.group())
@@ -481,7 +485,7 @@ class EpisodeMemoryExtractor(MemoryExtractor):
                     summary = data["summary"]
 
                     return EpisodeMemory(
-                        memory_type=MemoryType.EPISODE_SUMMARY,
+                        memory_type=MemoryType.EPISODE_MEMORY,
                         user_id=user_id,
                         ori_event_id_list=[
                             memcell.event_id for memcell in request.memcell_list
@@ -521,7 +525,7 @@ class EpisodeMemoryExtractor(MemoryExtractor):
             for user_id in request.user_id_list:
                 if user_id not in participants:
                     memory = EpisodeMemory(
-                        memory_type=MemoryType.EPISODE_SUMMARY,
+                        memory_type=MemoryType.EPISODE_MEMORY,
                         user_id=user_id,
                         ori_event_id_list=[
                             memcell.event_id for memcell in request.memcell_list

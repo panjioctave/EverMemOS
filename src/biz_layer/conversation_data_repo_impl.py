@@ -236,3 +236,41 @@ class ConversationDataRepositoryImpl(ConversationDataRepository):
         ) as e:
             logger.error("从Redis获取对话数据失败: group_id=%s, 错误=%s", group_id, e)
             return []
+
+    async def delete_conversation_data(self, group_id: str) -> bool:
+        """
+        删除指定群组的所有对话数据
+
+        清空Redis中该群组的所有缓存消息，通常用于边界判断后重置对话历史
+
+        Args:
+            group_id: 群组ID
+
+        Returns:
+            bool: 删除成功返回True，失败返回False
+        """
+        logger.info("开始删除对话数据: group_id=%s", group_id)
+
+        try:
+            cache_manager = await self._get_cache_manager()
+            redis_key = self._get_redis_key(group_id)
+
+            # 使用缓存管理器删除整个键
+            success = await cache_manager.delete(redis_key)
+
+            if success:
+                logger.info("成功删除对话数据: group_id=%s", group_id)
+            else:
+                logger.warning("删除对话数据失败或键不存在: group_id=%s", group_id)
+
+            return success
+
+        except (
+            RuntimeError,
+            ConnectionError,
+            TimeoutError,
+            ValueError,
+            TypeError,
+        ) as e:
+            logger.error("删除对话数据失败: group_id=%s, 错误=%s", group_id, e)
+            return False

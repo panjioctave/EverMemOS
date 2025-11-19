@@ -62,6 +62,58 @@ class EpisodicMemoryRawRepository(BaseRepository[EpisodicMemory]):
             logger.error("❌ 根据事件ID和用户ID获取情景记忆失败: %s", e)
             return None
 
+    async def get_by_event_ids(
+        self,
+        event_ids: List[str],
+        user_id: str,
+        session: Optional[AsyncIOMotorClientSession] = None,
+    ) -> Dict[str, EpisodicMemory]:
+        """
+        根据事件ID列表和用户ID批量获取情景记忆
+
+        Args:
+            event_ids: 事件ID列表
+            user_id: 用户ID
+            session: 可选的 MongoDB 会话，用于事务支持
+
+        Returns:
+            Dict[str, EpisodicMemory]: 以 event_id 为 key 的字典，方便快速查找
+        """
+        if not event_ids:
+            return {}
+
+        try:
+            # 将字符串 event_id 列表转换为 ObjectId 列表
+            object_ids = []
+            for event_id in event_ids:
+                try:
+                    object_ids.append(ObjectId(event_id))
+                except Exception as e:
+                    logger.warning(f"⚠️  无效的 event_id: {event_id}, 错误: {e}")
+                    continue
+
+            if not object_ids:
+                return {}
+
+            # 批量查询
+            results = await self.model.find(
+                {"_id": {"$in": object_ids}, "user_id": user_id}, session=session
+            ).to_list()
+
+            # 转换为字典，方便后续使用
+            result_dict = {str(doc.id): doc for doc in results}
+
+            logger.debug(
+                "✅ 批量获取情景记忆成功: user_id=%s, 请求 %d 个, 找到 %d 个",
+                user_id,
+                len(event_ids),
+                len(result_dict),
+            )
+            return result_dict
+        except Exception as e:
+            logger.error("❌ 批量获取情景记忆失败: %s", e)
+            return {}
+
     async def get_by_user_id(
         self,
         user_id: str,

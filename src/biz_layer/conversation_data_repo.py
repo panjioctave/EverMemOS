@@ -32,3 +32,16 @@ class ConversationDataRepository(ABC):
     ) -> List[RawData]:
         """获取对话数据"""
         pass
+
+    @abstractmethod
+    async def delete_conversation_data(self, group_id: str) -> bool:
+        """
+        删除指定群组的所有对话数据
+
+        Args:
+            group_id: 群组ID
+
+        Returns:
+            bool: 删除成功返回True，失败返回False
+        """
+        pass

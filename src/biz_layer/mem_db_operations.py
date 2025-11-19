@@ -252,10 +252,10 @@ def _convert_episode_memory_to_doc(
     # 解析时间戳为datetime对象
     if current_time is None:
         current_time = get_now_with_timezone()
-    
+
     # 默认使用 current_time
     timestamp_dt = current_time
-    
+
     if hasattr(episode_memory, 'timestamp') and episode_memory.timestamp:
         try:
             if isinstance(episode_memory.timestamp, datetime):
@@ -301,22 +301,22 @@ def _convert_semantic_memory_to_doc(
 ) -> "PersonalSemanticMemory":
     """
     将SemanticMemoryItem业务对象转换为PersonalSemanticMemory数据库文档格式
-    
+
     Args:
         semantic_memory: 业务层的SemanticMemoryItem对象
         parent_doc: 父情景记忆文档
         current_time: 当前时间
-        
+
     Returns:
         PersonalSemanticMemory: 数据库文档格式的个人语义记忆对象
     """
     from infra_layer.adapters.out.persistence.document.memory.personal_semantic_memory import (
         PersonalSemanticMemory,
     )
-    
+
     if current_time is None:
         current_time = get_now_with_timezone()
-    
+
     return PersonalSemanticMemory(
         user_id=semantic_memory.user_id,
         content=semantic_memory.content,
@@ -334,40 +334,38 @@ def _convert_semantic_memory_to_doc(
 
 
 def _convert_event_log_to_docs(
-    event_log: Any,
-    parent_doc: EpisodicMemory,
-    current_time: Optional[datetime] = None,
+    event_log: Any, parent_doc: EpisodicMemory, current_time: Optional[datetime] = None
 ) -> List["PersonalEventLog"]:
     """
     将EventLog业务对象转换为PersonalEventLog数据库文档格式列表
-    
+
     Args:
         event_log: 业务层的EventLog对象
         parent_doc: 父情景记忆文档
         current_time: 当前时间
-        
+
     Returns:
         List[PersonalEventLog]: 数据库文档格式的个人事件日志对象列表
     """
     from infra_layer.adapters.out.persistence.document.memory.personal_event_log import (
         PersonalEventLog,
     )
-    
+
     if current_time is None:
         current_time = get_now_with_timezone()
-    
+
     docs = []
     if not event_log.atomic_fact or not event_log.fact_embeddings:
         return docs
-    
+
     for i, fact in enumerate(event_log.atomic_fact):
         if i >= len(event_log.fact_embeddings):
             break
-        
+
         vector = event_log.fact_embeddings[i]
         if hasattr(vector, 'tolist'):
             vector = vector.tolist()
-        
+
         doc = PersonalEventLog(
             user_id=event_log.user_id,
             atomic_fact=fact,
@@ -381,7 +379,7 @@ def _convert_event_log_to_docs(
             extend={},
         )
         docs.append(doc)
-    
+
     return docs
 
 
@@ -862,16 +860,21 @@ def _convert_memcell_to_document(
         email_fields = {}
         linkdoc_fields = {}
 
-
         # 准备 semantic_memories（转为字典列表）
         semantic_memories_list = None
         if hasattr(memcell, 'semantic_memories') and memcell.semantic_memories:
             semantic_memories_list = [
-                sm.to_dict() if hasattr(sm, 'to_dict') else (sm if isinstance(sm, dict) else None)
+                (
+                    sm.to_dict()
+                    if hasattr(sm, 'to_dict')
+                    else (sm if isinstance(sm, dict) else None)
+                )
                 for sm in memcell.semantic_memories
             ]
-            semantic_memories_list = [sm for sm in semantic_memories_list if sm is not None]
-        
+            semantic_memories_list = [
+                sm for sm in semantic_memories_list if sm is not None
+            ]
+
         # 准备 event_log（转为字典）
         event_log_dict = None
         if hasattr(memcell, 'event_log') and memcell.event_log:
@@ -879,12 +882,12 @@ def _convert_memcell_to_document(
                 event_log_dict = memcell.event_log.to_dict()
             elif isinstance(memcell.event_log, dict):
                 event_log_dict = memcell.event_log
-        
+
         # 准备 extend 字段（包含 embedding 等扩展信息）
         extend_dict = {}
         if hasattr(memcell, 'extend') and memcell.extend:
             extend_dict = memcell.extend if isinstance(memcell.extend, dict) else {}
-        
+
         # 添加 embedding 到 extend（如果有）
         if hasattr(memcell, 'embedding') and memcell.embedding:
             extend_dict['embedding'] = memcell.embedding
@@ -906,7 +909,9 @@ def _convert_memcell_to_document(
             episode=memcell.episode,
             semantic_memories=semantic_memories_list,  # ✅ 添加语义记忆
             event_log=event_log_dict,  # ✅ 添加事件日志
-            extend=extend_dict if extend_dict else None,  # ✅ 添加 extend（包含 embedding）
+            extend=(
+                extend_dict if extend_dict else None
+            ),  # ✅ 添加 extend（包含 embedding）
             # EmailMemCell 扩展字段
             clips=email_fields.get("clips") or linkdoc_fields.get("clips"),
             email_address=email_fields.get("email_address"),
@@ -938,95 +943,6 @@ def _convert_memcell_to_document(
 
 # ==================== 数据库操作函数 ====================
 from core.observation.tracing.decorators import trace_logger
-
-
-@trace_logger(
-    operation_name="mem_db_operations _get_raw_data_by_time_range", log_level="info"
-)
-async def _get_raw_data_by_time_range(
-    group_id: str, start_time: datetime, end_time: datetime, limit: int = 1000
-) -> List[RawData]:
-    """
-    根据时间范围获取RawData（从 Redis 缓存读取）
-    
-    Args:
-        group_id: 群组ID
-        start_time: 开始时间（包含）
-        end_time: 结束时间（不包含）
-        limit: 最大返回数量
-    
-    Returns:
-        List[RawData]: RawData 列表，按时间升序排列
-    """
-    try:
-        from component.redis_provider import RedisProvider
-        from core.di import get_bean_by_type
-        from memory_layer.memcell_extractor.base_memcell_extractor import RawData
-        from memory_layer.types import RawDataType
-        from common_utils.datetime_utils import from_iso_format
-        import json
-        
-        # 获取 Redis 客户端
-        redis_provider = get_bean_by_type(RedisProvider)
-        redis_key = f"chat_history:{group_id}"
-        
-        # 从 Redis 读取所有消息（倒序存储，需要反转）
-        messages_json = await redis_provider.lrange(redis_key, 0, -1)
-        
-        if not messages_json:
-            logger.info(
-                f"[_get_raw_data_by_time_range] Redis 中无历史消息: group_id={group_id}"
-            )
-            return []
-        
-        # 解析消息并按时间过滤
-        raw_data_list = []
-        for msg_json in reversed(messages_json):  # 反转以保持时间升序
-            try:
-                msg = json.loads(msg_json)
-                msg_time = from_iso_format(msg.get('create_time'))
-                
-                # 过滤时间范围
-                if msg_time and start_time <= msg_time < end_time:
-                    # 转换为 RawData 格式
-                    message_payload = {
-                        "speaker_id": msg.get("sender"),
-                        "speaker_name": msg.get("sender_name", msg.get("sender")),
-                        "content": msg.get("content", ""),
-                        "timestamp": msg_time,
-                    }
-                    
-                    raw_item = RawData(
-                        content=message_payload,
-                        data_id=str(msg.get("message_id")),
-                        data_type=RawDataType.CONVERSATION,
-                    )
-                    
-                    raw_data_list.append(raw_item)
-                    
-                    # 达到限制数量
-                    if len(raw_data_list) >= limit:
-                        break
-                        
-            except Exception as parse_error:
-                logger.warning(f"解析消息失败: {parse_error}, msg={msg_json[:100]}")
-                continue
-        
-        logger.info(
-            f"[_get_raw_data_by_time_range] group_id={group_id}, "
-            f"time_range=[{start_time}, {end_time}), "
-            f"found {len(raw_data_list)} messages from Redis"
-        )
-        
-        return raw_data_list
-        
-    except Exception as e:
-        logger.error(f"[_get_raw_data_by_time_range] 查询失败: {e}", exc_info=True)
-        return []
-
-
-async def _get_user_organization(user_ids: List[str]) -> List:
-    return []
 
 
 async def _save_memcell_to_database(
@@ -1322,7 +1238,9 @@ async def _update_status_for_continuing_conversation(
         # 先获取现有状态
         existing_status = await status_repo.get_by_group_id(request.group_id)
         if not existing_status:
-            logger.info(f"未找到现有状态，创建新的状态记录: group_id={request.group_id}")
+            logger.info(
+                f"未找到现有状态，创建新的状态记录: group_id={request.group_id}"
+            )
             # 创建新状态记录
             latest_dt = _normalize_datetime_for_storage(latest_time)
             update_data = {

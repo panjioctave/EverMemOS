@@ -60,10 +60,9 @@ class RetrieveMemRequest:
     end_time: Optional[str] = None
     query: Optional[str] = None  # retrieve的时候
     retrieve_method: RetrieveMethod = field(default=RetrieveMethod.KEYWORD)
-    memory_sub_type: Optional[str] = None  # 记忆类型过滤：episode/semantic_memory/event_log（用于选择对应的Repository）
-    semantic_start_time: Optional[str] = None  # 语义记忆开始时间过滤
-    semantic_end_time: Optional[str] = None  # 语义记忆结束时间过滤
-    current_time: Optional[str] = None  # 当前时间，用于过滤有效期内的语义记忆
+    current_time: Optional[str] = (
+        None  # 当前时间，用于过滤有效期内的语义记忆 happened_at cuurent_time的事件
+    )
     radius: Optional[float] = None  # COSINE 相似度阈值（None 时使用默认值 0.6）
 
 
@@ -86,7 +85,7 @@ class RetrieveMemResponse:
 @dataclass
 class UserDetail:
     """用户详情
-    
+
     用于 ConversationMetaRequest.user_details 的值结构
     """
 
@@ -97,8 +96,7 @@ class UserDetail:
 
 @dataclass
 class ConversationMetaRequest:
-    """对话元数据请求
-    """
+    """对话元数据请求"""
 
     version: str  # 版本号
     scene: str  # 场景标识
@@ -108,5 +106,7 @@ class ConversationMetaRequest:
     created_at: str  # 创建时间，ISO格式字符串
     description: Optional[str] = None  # 对话描述
     default_timezone: Optional[str] = "Asia/Shanghai"  # 默认时区
-    user_details: Dict[str, UserDetail] = field(default_factory=dict)  # 用户详情，key是动态的（如user_001, robot_001），value结构固定
+    user_details: Dict[str, UserDetail] = field(
+        default_factory=dict
+    )  # 用户详情，key是动态的（如user_001, robot_001），value结构固定
     tags: List[str] = field(default_factory=list)  # 标签列表

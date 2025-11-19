@@ -336,13 +336,13 @@ def get_group_semantic_generation_prompt(
 
 
 def get_semantic_generation_prompt(
-    episode_summary: str, episode_content: str, user_id: str = None
+    episode_memory: str, episode_content: str, user_id: str = None
 ) -> str:
     """
     生成个人语义记忆联想预测的提示词
 
     Args:
-        episode_summary: EpisodeMemory的摘要内容
+        episode_memory: EpisodeMemory的摘要内容
         episode_content: EpisodeMemory的详细内容
         user_id: 用户ID，用于生成具体的用户ID
 
@@ -359,7 +359,7 @@ def get_semantic_generation_prompt(
 ## 输入内容：
 
 **EpisodeMemory摘要：**
-{episode_summary}
+{episode_memory}
 
 **EpisodeMemory详细内容：**
 {episode_content}{user_id_info}

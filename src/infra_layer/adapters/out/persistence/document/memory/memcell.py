@@ -72,7 +72,9 @@ class MemCell(DocumentBase, AuditBase):
     """
 
     # 核心字段（必填）
-    user_id: Optional[Indexed(str)] = Field(None, description="用户ID，核心查询字段。群组记忆时为None，个人记忆时为用户ID")
+    user_id: Optional[Indexed(str)] = Field(
+        None, description="用户ID，核心查询字段。群组记忆时为None，个人记忆时为用户ID"
+    )
     timestamp: Indexed(datetime) = Field(..., description="发生时间，分片键")
     summary: str = Field(..., min_length=1, description="记忆单元摘要")
 
@@ -93,6 +95,7 @@ class MemCell(DocumentBase, AuditBase):
         default=None, description="关联的实体ID"
     )
 
+    # 可能已经不用了
     episode: Optional[str] = Field(default=None, description="情景记忆")
     semantic_memories: Optional[List] = Field(default=None, description="语义记忆")
     event_log: Optional[Dict] = Field(default=None, description="Event Log 原子事实")

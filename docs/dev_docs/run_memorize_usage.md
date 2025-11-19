@@ -30,7 +30,7 @@ python src/bootstrap.py src/run_memorize.py --input data/group_chat.json
 ```bash
 python src/bootstrap.py src/run_memorize.py \
   --input data/group_chat.json \
-  --api-url http://localhost:1995/api/v2/agentic/memorize
+  --api-url http://localhost:1995/api/v3/agentic/memorize
 ```
 
 ### 3. 仅验证格式
@@ -168,7 +168,7 @@ python src/bootstrap.py src/run_memorize.py \
 ✓ 记忆存储成功！共保存 3 条记忆
 
 === 存储的记忆摘要 ===
-1. 类型: episode_summary
+1. 类型: episode_memory
    摘要: 团队讨论了智能销售助手项目的开发进度和技术方案...
 2. 类型: profile
    摘要: Alex 是技术负责人，负责技术架构设计...
@@ -253,6 +253,6 @@ A: 目前默认使用 80% 作为历史消息。如需调整，可以在调用 `_
 ## 参考资料
 
 - [GroupChatFormat 格式定义](../../data_format/group_chat/group_chat_format.py)
-- [Agentic V2 API 文档](../api_docs/agentic_v2_api.md)
+- [Agentic V3 API 文档](../api_docs/agentic_v3_api_zh.md)
 - [Bootstrap 使用文档](./bootstrap_usage.md)
 

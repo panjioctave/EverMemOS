@@ -31,19 +31,17 @@ class MemoryType(str, Enum):
     ENTITY = "entity"
     RELATION = "relation"
     BEHAVIOR_HISTORY = "behavior_history"
+
+    PERSONAL_SEMANTIC_MEMORY = "personal_semantic_memory"
+    PERSONAL_EVENT_LOG = "personal_event_log"
+
     MULTIPLE = "multiple"  # 多类型查询
 
+    EPISODE_MEMORY = "episode_memory"  # 情节记忆
 
-class MemoryType_RAW(Enum):
-    """Types of memories that can be extracted."""
+    GROUP_PROFILE = "group_profile"  # 群组画像
 
-    EPISODE_SUMMARY = "episode_summary"  # 情节记忆
-    BASE_MEMORY = "baseMemory"  # 稳定、客观、可验证 Who He Is
-    PROFILE = "profile"  # 能力与经验画像
-    PREFERENCES = "preferences"  # 偏好设置
-    RELATIONSHIPS = "relationships"  # 人际关系
-    SEMANTIC_SUMMARY = "semantic"  # 语义记忆
-    GROUP_PROFILE = "group_profile"
+    CORE = "core"  # 核心记忆
 
 
 @dataclass
