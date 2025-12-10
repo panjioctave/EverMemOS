@@ -305,12 +305,14 @@ ES_PORT=...
 #### 安装步骤
 
 ```bash
-# 1. 确保已同步开发依赖
+# 1. 确保已配置好虚拟环境并同步开发依赖（pre-commit 依赖于虚拟环境中的工具）
 uv sync --dev
 
-# 2. 安装 pre-commit hook
-pre-commit install
+# 2. 使用 Makefile 安装 pre-commit hook
+make setup-hooks
 ```
+
+> **重要提示**：`pre-commit` 命令需要在虚拟环境激活后使用，因为它依赖虚拟环境中安装的 black、ruff 等代码检查工具。请确保先完成 `uv sync --dev` 再执行 `make setup-hooks`。
 
 #### 作用
 

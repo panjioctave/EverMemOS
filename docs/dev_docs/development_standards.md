@@ -287,12 +287,15 @@ The project uses `pre-commit` to unify code style. It's recommended to install p
 #### Installation Steps
 
 ```bash
-# 1. Ensure development dependencies are synced
+# 1. Ensure virtual environment is configured and development dependencies are synced
+# (pre-commit depends on tools in the virtual environment)
 uv sync --dev
 
-# 2. Install pre-commit hook
-pre-commit install
+# 2. Install pre-commit hook using Makefile
+make setup-hooks
 ```
+
+> **Important**: The `pre-commit` command must be used after the virtual environment is activated, as it depends on code checking tools like black and ruff installed in the virtual environment. Please ensure `uv sync --dev` is completed before running `make setup-hooks`.
 
 #### Functions
 
