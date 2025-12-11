@@ -105,7 +105,7 @@ Both APIs use the same simple direct single message format:
 ```json
 {
   "message_id": "msg_001",
-  "create_time": "2025-02-01T10:00:00+08:00",
+  "create_time": "2025-02-01T10:00:00+00:00",
   "sender": "user_103",
   "sender_name": "Chen",
   "content": "Message content",
@@ -156,7 +156,7 @@ curl -X POST http://localhost:1995/api/v1/memories \
   -H "Content-Type: application/json" \
   -d '{
     "message_id": "msg_001",
-    "create_time": "2025-02-01T10:00:00+08:00",
+    "create_time": "2025-02-01T10:00:00+00:00",
     "sender": "user_103",
     "sender_name": "Chen",
     "content": "We need to complete the product design this week",
@@ -177,7 +177,7 @@ async def store_memory():
             "http://localhost:1995/api/v1/memories",
             json={
                 "message_id": "msg_001",
-                "create_time": "2025-02-01T10:00:00+08:00",
+                "create_time": "2025-02-01T10:00:00+00:00",
                 "sender": "user_103",
                 "sender_name": "Chen",
                 "content": "We need to complete the product design this week",
@@ -200,7 +200,7 @@ fetch('http://localhost:1995/api/v1/memories', {
   },
   body: JSON.stringify({
     message_id: 'msg_001',
-    create_time: '2025-02-01T10:00:00+08:00',
+    create_time: '2025-02-01T10:00:00+00:00',
     sender: 'user_103',
     sender_name: 'Chen',
     content: 'We need to complete the product design this week',
@@ -222,7 +222,7 @@ fetch('http://localhost:1995/api/v1/memories', {
   },
   body: JSON.stringify({
     message_id: 'msg_001',
-    create_time: '2025-02-01T10:00:00+08:00',
+    create_time: '2025-02-01T10:00:00+00:00',
     sender: 'user_103',
     sender_name: 'Chen',
     content: 'We need to complete the product design this week',
@@ -246,7 +246,7 @@ MemSys defines a standardized group chat data format `GroupChatFormat` for stori
   "conversation_meta": {
     "group_id": "group_001",
     "name": "Project Discussion Group",
-    "default_timezone": "+08:00",
+    "default_timezone": "+00:00",
     "user_details": {
       "user_101": {
         "full_name": "Alex",
@@ -258,7 +258,7 @@ MemSys defines a standardized group chat data format `GroupChatFormat` for stori
   "conversation_list": [
     {
       "message_id": "msg_001",
-      "create_time": "2025-02-01T10:00:00+08:00",
+      "create_time": "2025-02-01T10:00:00+00:00",
       "sender": "user_101",
       "sender_name": "Alex",
       "type": "text",
@@ -416,7 +416,7 @@ Group Name: Project Discussion Group
 Group ID: group_001
 User Count: 5
 Message Count: 20
-Time Range: 2025-02-01T10:00:00+08:00 ~ 2025-02-01T18:30:00+08:00
+Time Range: 2025-02-01T10:00:00+00:00 ~ 2025-02-01T18:30:00+00:00
 
 ======================================================================
 Starting to Call Memorize API for Each Message
@@ -455,7 +455,7 @@ Create a JSON file conforming to GroupChatFormat:
   "conversation_meta": {
     "group_id": "project_team_001",
     "name": "Product Development Team",
-    "default_timezone": "+08:00",
+    "default_timezone": "+00:00",
     "user_details": {
       "alice": {
         "full_name": "Alice Wang",
@@ -472,7 +472,7 @@ Create a JSON file conforming to GroupChatFormat:
   "conversation_list": [
     {
       "message_id": "msg_20250201_001",
-      "create_time": "2025-02-01T09:00:00+08:00",
+      "create_time": "2025-02-01T09:00:00+00:00",
       "sender": "alice",
       "sender_name": "Alice Wang",
       "type": "text",
@@ -481,7 +481,7 @@ Create a JSON file conforming to GroupChatFormat:
     },
     {
       "message_id": "msg_20250201_002",
-      "create_time": "2025-02-01T09:02:00+08:00",
+      "create_time": "2025-02-01T09:02:00+00:00",
       "sender": "bob",
       "sender_name": "Bob Chen",
       "type": "text",

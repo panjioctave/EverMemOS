@@ -7,7 +7,11 @@ import re
 import asyncio
 import httpx
 from typing import List, Dict, Any
-from common_utils.datetime_utils import get_now_with_timezone, to_iso_format
+from common_utils.datetime_utils import (
+    get_now_with_timezone,
+    get_timezone,
+    to_iso_format,
+)
 
 
 def extract_event_time_from_memory(mem: Dict[str, Any]) -> str:
@@ -95,7 +99,9 @@ class SimpleMemoryManager:
         self.retrieve_url = f"{base_url}/api/v1/memories/search"
         self.conversation_meta_url = f"{base_url}/api/v1/memories/conversation-meta"
         self._message_counter = 0
-        self._conversation_meta_saved = False  # Flag to indicate if conversation-meta is saved
+        self._conversation_meta_saved = (
+            False  # Flag to indicate if conversation-meta is saved
+        )
 
     async def store(self, content: str, sender: str = "User") -> bool:
         """Store a message
@@ -184,7 +190,7 @@ class SimpleMemoryManager:
             "description": f"Simple Demo - {self.scene} scene",
             "group_id": self.group_id,
             "created_at": to_iso_format(now),
-            "default_timezone": "Asia/Shanghai",
+            "default_timezone": get_timezone().key,
             "user_details": {
                 "User": {"full_name": "Demo User", "role": "user", "extra": {}},
                 "Assistant": {
