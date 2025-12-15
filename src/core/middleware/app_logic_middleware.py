@@ -51,6 +51,11 @@ class AppLogicMiddleware(BaseHTTPMiddleware):
         error_message: Optional[str] = None
 
         try:
+            # ========== Validate request: call validate_request ==========
+            await self._app_logic_provider.validate_request(request)
+            # If validation fails (e.g., quota exceeded), HTTPException will be raised
+            # FastAPI will catch HTTPException and return appropriate response (e.g., 429)
+
             # ========== Request begins: call on_request_begin ==========
             await self._app_logic_provider.on_request_begin(request)
 

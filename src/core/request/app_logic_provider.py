@@ -72,6 +72,36 @@ class AppLogicProvider(ABC):
         """
         raise NotImplementedError
 
+    async def validate_request(self, request: Request) -> None:
+        """
+        Validate request (optional implementation)
+
+        This method is called after setup_app_context() and before on_request_begin().
+        If validation fails, raise HTTPException to abort the request.
+
+        Use cases:
+        - Quota validation
+        - Permission checks
+        - Rate limiting
+        - Custom business validations
+
+        Args:
+            request: FastAPI request object
+
+        Raises:
+            HTTPException: When validation fails (e.g., 429 for quota exceeded)
+
+        Example:
+            >>> async def validate_request(self, request: Request) -> None:
+            ...     if not self._check_quota(request):
+            ...         raise HTTPException(
+            ...             status_code=429,
+            ...             detail="Quota exceeded"
+            ...         )
+        """
+        # Default implementation is empty; subclasses may optionally override
+        _ = request  # Avoid unused parameter warning
+
     async def on_request_begin(self, request: Request) -> None:
         """
         Callback method when request begins
