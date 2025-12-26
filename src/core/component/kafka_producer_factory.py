@@ -12,14 +12,62 @@ import ssl
 from typing import Dict, List, Optional, Any, Union
 from hashlib import md5
 
+import async_timeout
 import bson
 from aiokafka import AIOKafkaProducer
+from aiokafka.producer.message_accumulator import MessageBatch
 
 from core.component.config_provider import ConfigProvider
 from core.component.kafka_consumer_factory import get_ca_file_path
 from core.di.decorators import component
-from core.observation.logger import get_logger
 from core.di.utils import get_bean_by_type
+from core.observation.logger import get_logger
+
+
+# =============================================================================
+# Monkey Patches for aiokafka performance and stability improvements
+# =============================================================================
+
+
+async def _optimized_wait_drain(self, timeout=None):
+    """
+    Optimized wait_drain: avoid asyncio.wait overhead for single Future.
+
+    The original implementation uses asyncio.wait([single_future]) which is
+    inefficient - it creates sets, registers/removes callbacks for each call.
+    This patch uses async_timeout directly for zero overhead.
+    """
+    waiter = self._drain_waiter
+    try:
+        async with async_timeout.timeout(timeout):
+            await waiter
+    except asyncio.TimeoutError:
+        pass
+    if waiter.done():
+        waiter.result()  # Check for exception
+
+
+# Save original start method
+_original_producer_start = AIOKafkaProducer.start
+
+
+async def _idempotent_start(self):
+    """
+    Idempotent start: prevent creating multiple sender tasks.
+
+    The original start() creates a sender task each time it's called.
+    Multiple sender tasks sharing the same accumulator causes a busy loop.
+    This patch makes start() idempotent - only the first call takes effect.
+    """
+    if getattr(self, "_memsys_started", False):
+        return
+    self._memsys_started = True
+    await _original_producer_start(self)
+
+
+# Apply patches
+# MessageBatch.wait_drain = _optimized_wait_drain
+AIOKafkaProducer.start = _idempotent_start
 
 logger = get_logger(__name__)
 
@@ -85,7 +133,7 @@ def get_default_producer_config(
     max_batch_size = int(get_env("MAX_BATCH_SIZE", "16384"))
     max_request_size = int(get_env("MAX_REQUEST_SIZE", "1048576"))
     request_timeout_ms = int(get_env("REQUEST_TIMEOUT_MS", "30000"))
-    retry_backoff_ms = int(get_env("RETRY_BACKOFF_MS", "500"))  # 重试退避时间
+    retry_backoff_ms = int(get_env("RETRY_BACKOFF_MS", "500"))
 
     config = {
         "kafka_servers": kafka_servers,
@@ -212,33 +260,6 @@ def key_serializer(key: Any) -> Optional[bytes]:
     return str(key).encode("utf-8")
 
 
-def _make_start_idempotent(producer: AIOKafkaProducer) -> AIOKafkaProducer:
-    """
-    Wrap producer.start() to make it idempotent.
-    
-    This prevents creating multiple sender tasks when start() is called multiple times,
-    which would cause a busy loop due to multiple senders sharing the same accumulator.
-    
-    Args:
-        producer: The AIOKafkaProducer instance to wrap
-        
-    Returns:
-        The same producer with idempotent start() method
-    """
-    original_start = producer.start
-    producer._started = False
-    
-    async def idempotent_start():
-        if producer._started:
-            logger.debug("Producer already started, skipping duplicate start() call")
-            return
-        producer._started = True
-        await original_start()
-    
-    producer.start = idempotent_start
-    return producer
-
-
 @component(name="kafka_producer_factory", primary=True)
 class KafkaProducerFactory:
     """
@@ -246,10 +267,9 @@ class KafkaProducerFactory:
 
     Provides caching and management of AIOKafkaProducer instances based on configuration
     Supports force_new parameter to create brand new producer instances
-    
-    IMPORTANT: The returned producer is already started. Do NOT call producer.start() again,
-    as it will create duplicate sender tasks and cause high CPU usage (busy loop).
-    The factory wraps start() to be idempotent, but it's best practice to not call it.
+
+    Note: AIOKafkaProducer.start() has been patched to be idempotent globally,
+    so calling start() multiple times is safe (only the first call takes effect).
     """
 
     def __init__(self):
@@ -321,9 +341,6 @@ class KafkaProducerFactory:
             security_protocol="SSL" if ca_file_path else "PLAINTEXT",
             ssl_context=ssl_context,
         )
-        
-        # Make start() idempotent to prevent busy loop from multiple sender tasks
-        producer = _make_start_idempotent(producer)
 
         producer_name = get_producer_name(kafka_servers)
 
@@ -407,7 +424,9 @@ class KafkaProducerFactory:
                             len(partitions) if partitions else 0,
                         )
                     except Exception as e:
-                        logger.error("Connection test failed for %s: %s", producer_name, e)
+                        logger.error(
+                            "Connection test failed for %s: %s", producer_name, e
+                        )
                         raise
 
                 logger.info(
