@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 
 from core.di import get_bean_by_type, get_bean, service
@@ -52,7 +52,6 @@ from infra_layer.adapters.out.persistence.repository.user_profile_raw_repository
     UserProfileRawRepository,
 )
 from api_specs.dtos.memory_query import FetchMemResponse
-
 from api_specs.memory_models import (
     MemoryType,
     MemoryModel,
@@ -555,7 +554,11 @@ class FetchMemoryServiceImpl(FetchMemoryServiceInterface):
                         memories = []
                 case MemoryType.FORESIGHT:
                     # Foresight: each user has only one foresight document
-                    foresight_records = await self._foresight_record_repo.get_by_user_id(user_id, limit=limit)
+                    foresight_records = (
+                        await self._foresight_record_repo.get_by_user_id(
+                            user_id, limit=limit
+                        )
+                    )
 
                     memories = [
                         self._convert_foresight_record(record)
@@ -598,24 +601,33 @@ class FetchMemoryServiceImpl(FetchMemoryServiceInterface):
 
                 case MemoryType.PROFILE:
                     # Profile: get user profiles from user_profile_repo
-                    user_profiles = await self._user_profile_repo.get_all_by_user(user_id, limit)
-                    
+                    user_profiles = await self._user_profile_repo.get_all_by_user(
+                        user_id, limit
+                    )
+
                     memories = []
                     for up in user_profiles:
-                        memories.append({
-                            "id": str(up.id),
-                            "user_id": up.user_id,
-                            "group_id": up.group_id,
-                            "profile_data": up.profile_data,
-                            "scenario": up.scenario,
-                            "confidence": up.confidence,
-                            "version": up.version,
-                            "cluster_ids": up.cluster_ids,
-                            "memcell_count": up.memcell_count,
-                            "last_updated_cluster": up.last_updated_cluster,
-                            "created_at": up.created_at.isoformat() if up.created_at else None,
-                            "updated_at": up.updated_at.isoformat() if up.updated_at else None,
-                        })
+                        # Avoid mutating persisted dict instances (reduce hidden side effects)
+                        memories.append(
+                            {
+                                "id": str(up.id),
+                                "user_id": up.user_id,
+                                "group_id": up.group_id,
+                                "profile_data": up.profile_data,
+                                "scenario": up.scenario,
+                                "confidence": up.confidence,
+                                "version": up.version,
+                                "cluster_ids": up.cluster_ids,
+                                "memcell_count": up.memcell_count,
+                                "last_updated_cluster": up.last_updated_cluster,
+                                "created_at": (
+                                    up.created_at.isoformat() if up.created_at else None
+                                ),
+                                "updated_at": (
+                                    up.updated_at.isoformat() if up.updated_at else None
+                                ),
+                            }
+                        )
 
                 case MemoryType.PREFERENCE:
                     # Preferences: extract preference settings from core memory
