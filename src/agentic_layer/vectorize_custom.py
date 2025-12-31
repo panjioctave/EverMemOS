@@ -28,7 +28,7 @@ class CustomVectorizeConfig:
 
     base_url: str = "http://localhost:8000/v1"
     api_key: str = "EMPTY"  # Many self-deployed services don't require API key
-    model: str = "Qwen3-Embedding-4B"
+    model: str = "Qwen/Qwen3-Embedding-4B"
     timeout: int = 30
     max_retries: int = 3
     batch_size: int = 10
@@ -44,7 +44,7 @@ class CustomVectorizeConfig:
         if not self.api_key:
             self.api_key = os.getenv("CUSTOM_EMBEDDING_API_KEY", "EMPTY")
         if not self.model:
-            self.model = os.getenv("CUSTOM_EMBEDDING_MODEL", "Qwen3-Embedding-4B")
+            self.model = os.getenv("CUSTOM_EMBEDDING_MODEL", "Qwen/Qwen3-Embedding-4B")
 
         self.timeout = int(os.getenv("VECTORIZE_TIMEOUT", str(self.timeout)))
         self.max_retries = int(os.getenv("VECTORIZE_MAX_RETRIES", str(self.max_retries)))
