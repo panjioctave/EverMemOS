@@ -456,16 +456,24 @@ async def process_memory_extraction(
     # 1. Initialize state
     state = await _init_extraction_state(memcell, request, current_time)
 
-    # 2. Extract Episodes
-    await _extract_episodes(state, memory_manager)
+    # 2. Parallel extract: Episode + (assistant scene) Foresight/EventLog
+    foresight_memories, event_logs = [], []
+    if state.is_assistant_scene:
+        _, foresight_memories, event_logs = await asyncio.gather(
+            _extract_episodes(state, memory_manager),
+            _extract_foresights(state, memory_manager),
+            _extract_event_logs(state, memory_manager),
+        )
+    else:
+        await _extract_episodes(state, memory_manager)
 
     # 3. Update MemCell and trigger clustering
     await _update_memcell_and_cluster(state)
 
-    # 4. Save and extract subsequent memories
+    # 4. Save memories
     memories_count = 0
     if if_memorize(memcell):
-        memories_count = await _process_memories(state, memory_manager)
+        memories_count = await _process_memories(state, foresight_memories, event_logs)
 
     return memories_count
 
@@ -609,9 +617,11 @@ async def _update_memcell_and_cluster(state: ExtractionState):
 
 
 async def _process_memories(
-    state: ExtractionState, memory_manager: MemoryManager
+    state: ExtractionState,
+    foresight_memories: List[Foresight],
+    event_logs: List[EventLog],
 ) -> int:
-    """Save Episodes and extract/save Foresight and EventLog
+    """Save Episodes and Foresight/EventLog
 
     Returns:
         int: Total number of memories saved
@@ -633,10 +643,8 @@ async def _process_memories(
         await _save_episodes(state, episodes_to_save, episodic_source)
         episodes_count = len(episodes_to_save)
 
-    if episodic_source:
-        foresight_memories, event_logs = await _extract_foresight_and_eventlog(
-            state, memory_manager, episodic_source
-        )
+    # Save foresight/eventlog (assistant scene only, already extracted)
+    if state.is_assistant_scene and (foresight_memories or event_logs):
         await _save_foresight_and_eventlog(state, foresight_memories, event_logs)
         foresight_count = len(foresight_memories)
         eventlog_count = len(event_logs)
@@ -646,6 +654,35 @@ async def _process_memories(
     )
 
     return episodes_count + foresight_count + eventlog_count
+
+
+async def _extract_foresights(
+    state: ExtractionState, memory_manager: MemoryManager
+) -> List[Foresight]:
+    """Extract Foresight from memcell (assistant scene only)."""
+    result = await memory_manager.extract_memory(
+        memcell=state.memcell, memory_type=MemoryType.FORESIGHT, user_id=None
+    )
+    if isinstance(result, Exception) or not result:
+        return []
+    for mem in result:
+        mem.group_id = state.request.group_id
+        mem.group_name = state.request.group_name
+    return result
+
+
+async def _extract_event_logs(
+    state: ExtractionState, memory_manager: MemoryManager
+) -> List[EventLog]:
+    """Extract EventLog from memcell (assistant scene only)."""
+    result = await memory_manager.extract_memory(
+        memcell=state.memcell, memory_type=MemoryType.EVENT_LOG, user_id=None
+    )
+    if isinstance(result, Exception) or not result:
+        return []
+    result.group_id = state.request.group_id
+    result.group_name = state.request.group_name
+    return [result]
 
 
 def _clone_episodes_for_users(state: ExtractionState) -> List[EpisodeMemory]:
@@ -687,94 +724,35 @@ async def _save_episodes(
         state.parent_docs_map[str(saved_doc.id)] = saved_doc
 
 
-async def _extract_foresight_and_eventlog(
-    state: ExtractionState,
-    memory_manager: MemoryManager,
-    episodic_source: List[EpisodeMemory],
-) -> Tuple[List[Foresight], List[EventLog]]:
-    """Extract Foresight and EventLog"""
-    logger.info(
-        f"[MemCell Processing] Extracting Foresight/EventLog, total {len(episodic_source)} Episodes"
-    )
-
-    tasks = []
-    metadata = []
-
-    for ep in episodic_source:
-        if not ep.id:
-            continue
-        tasks.append(
-            memory_manager.extract_memory(
-                memcell=state.memcell,
-                memory_type=MemoryType.FORESIGHT,
-                user_id=ep.user_id,
-                episode_memory=ep,
-            )
-        )
-        metadata.append({'type': MemoryType.FORESIGHT, 'ep': ep})
-        tasks.append(
-            memory_manager.extract_memory(
-                memcell=state.memcell,
-                memory_type=MemoryType.EVENT_LOG,
-                user_id=ep.user_id,
-                episode_memory=ep,
-            )
-        )
-        metadata.append({'type': MemoryType.EVENT_LOG, 'ep': ep})
-
-    if not tasks:
-        return [], []
-
-    results = await asyncio.gather(*tasks, return_exceptions=True)
-
-    foresight_memories = []
-    event_logs = []
-
-    for meta, result in zip(metadata, results):
-        if isinstance(result, Exception) or not result:
-            continue
-
-        ep = meta['ep']
-        if meta['type'] == MemoryType.FORESIGHT:
-            for mem in result:
-                mem.parent_episode_id = ep.id
-                mem.user_id = ep.user_id
-                mem.group_id = ep.group_id
-                mem.group_name = ep.group_name
-                mem.user_name = ep.user_name
-                foresight_memories.append(mem)
-        elif meta['type'] == MemoryType.EVENT_LOG:
-            result.parent_episode_id = ep.id
-            result.user_id = ep.user_id
-            result.group_id = ep.group_id
-            result.group_name = ep.group_name
-            result.user_name = ep.user_name
-            event_logs.append(result)
-
-    return foresight_memories, event_logs
-
-
 async def _save_foresight_and_eventlog(
     state: ExtractionState,
     foresight_memories: List[Foresight],
     event_logs: List[EventLog],
 ):
-    """Save Foresight and EventLog"""
-    foresight_docs = []
-    for mem in foresight_memories:
-        parent_doc = state.parent_docs_map.get(str(mem.parent_episode_id))
-        if parent_doc:
-            foresight_docs.append(
-                _convert_foresight_to_doc(mem, parent_doc, state.current_time)
-            )
+    """Save Foresight and EventLog (after episode saved)"""
+    # Get the saved doc of group episode as parent_doc
+    parent_doc = None
+    if state.group_episode_memories:
+        ep_id = state.group_episode_memories[0].id
+        if ep_id:
+            parent_doc = state.parent_docs_map.get(ep_id)
+
+    if not parent_doc:
+        logger.warning(
+            "[MemCell Processing] No parent_doc for foresight/eventlog, skip saving"
+        )
+        return
+
+    foresight_docs = [
+        _convert_foresight_to_doc(mem, parent_doc, state.current_time)
+        for mem in foresight_memories
+    ]
 
     event_log_docs = []
     for el in event_logs:
-        parent_doc = state.parent_docs_map.get(str(el.parent_episode_id))
-        if parent_doc:
-            event_log_docs.extend(
-                _convert_event_log_to_docs(el, parent_doc, state.current_time)
-            )
+        event_log_docs.extend(
+            _convert_event_log_to_docs(el, parent_doc, state.current_time)
+        )
 
     # assistant scene: copy to each user
     if state.is_assistant_scene:

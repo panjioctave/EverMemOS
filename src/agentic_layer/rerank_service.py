@@ -254,6 +254,24 @@ class HybridRerankService(RerankServiceInterface):
         """Get the current model name (from primary service)"""
         return self.primary_service.get_model_name()
 
+    async def _make_rerank_request(
+        self, query: str, documents: List[str], instruction: str = None
+    ) -> Dict[str, Any]:
+        """Make rerank request with fallback support"""
+        return await self.execute_with_fallback(
+            "_make_rerank_request",
+            lambda: self.primary_service._make_rerank_request(
+                query, documents, instruction
+            ),
+            lambda: (
+                self.fallback_service._make_rerank_request(
+                    query, documents, instruction
+                )
+                if self.fallback_service
+                else None
+            ),
+        )
+
     async def execute_with_fallback(
         self, operation_name: str, primary_func, fallback_func
     ):
