@@ -10,8 +10,17 @@ from core.observation.logger import get_logger
 from memory_layer.llm.llm_provider import LLMProvider
 from memory_layer.memcell_extractor.conv_memcell_extractor import ConvMemCellExtractor
 from memory_layer.memcell_extractor.base_memcell_extractor import RawData
-from memory_layer.memcell_extractor.conv_memcell_extractor import ConversationMemCellExtractRequest
-from api_specs.memory_types import MemCell, RawDataType, MemoryType, Foresight, BaseMemory, EpisodeMemory
+from memory_layer.memcell_extractor.conv_memcell_extractor import (
+    ConversationMemCellExtractRequest,
+)
+from api_specs.memory_types import (
+    MemCell,
+    RawDataType,
+    MemoryType,
+    Foresight,
+    BaseMemory,
+    EpisodeMemory,
+)
 from memory_layer.memory_extractor.episode_memory_extractor import (
     EpisodeMemoryExtractor,
     EpisodeMemoryExtractRequest,
@@ -47,9 +56,9 @@ class MemoryManager:
         # Unified LLM Provider - shared by all extractors
         self.llm_provider = LLMProvider(
             provider_type=os.getenv("LLM_PROVIDER", "openai"),
-            model=os.getenv("LLM_MODEL", "Qwen3-235B"),
+            model=os.getenv("LLM_MODEL", "openai/gpt-4.1-mini"),  # skip-sensitive-check
             base_url=os.getenv("LLM_BASE_URL"),
-            api_key=os.getenv("LLM_API_KEY", "123"),
+            api_key=os.getenv("LLM_API_KEY", "your-api-key"),
             temperature=float(os.getenv("LLM_TEMPERATURE", "0.3")),
             max_tokens=int(os.getenv("LLM_MAX_TOKENS", "16384")),
         )
@@ -115,7 +124,6 @@ class MemoryManager:
 
         return memcell, status_result
 
-    # TODO: add username
     async def extract_memory(
         self,
         memcell: MemCell,
@@ -127,9 +135,6 @@ class MemoryManager:
         group_name: Optional[str] = None,
         old_memory_list: Optional[List[BaseMemory]] = None,
         user_organization: Optional[List] = None,
-        episode_memory: Optional[
-            EpisodeMemory
-        ] = None,  # Used for Foresight and EventLog extraction
     ):
         """
         Extract a single memory
@@ -158,10 +163,14 @@ class MemoryManager:
                 return await self._extract_episode(memcell, user_id, group_id)
 
             case MemoryType.FORESIGHT:
-                return await self._extract_foresight(episode_memory)
+                return await self._extract_foresight(
+                    memcell, user_id=user_id, group_id=group_id
+                )
 
             case MemoryType.EVENT_LOG:
-                return await self._extract_event_log(episode_memory)
+                return await self._extract_event_log(
+                    memcell, user_id=user_id, group_id=group_id
+                )
 
             case MemoryType.PROFILE:
                 return await self._extract_profile(
@@ -190,7 +199,9 @@ class MemoryManager:
             self._episode_extractor = EpisodeMemoryExtractor(self.llm_provider)
 
         # Build extraction request
-        from memory_layer.memory_extractor.base_memory_extractor import MemoryExtractRequest
+        from memory_layer.memory_extractor.base_memory_extractor import (
+            MemoryExtractRequest,
+        )
 
         request = MemoryExtractRequest(
             memcell=memcell,
@@ -207,41 +218,77 @@ class MemoryManager:
         return await self._episode_extractor.extract_memory(request)
 
     async def _extract_foresight(
-        self, episode_memory: Optional[EpisodeMemory]
+        self,
+        memcell: Optional[MemCell],
+        user_id: Optional[str] = None,
+        group_id: Optional[str] = None,
     ) -> List[Foresight]:
-        """Extract Foresight"""
-        if not episode_memory:
-            logger.warning(
-                "[MemoryManager] Missing episode_memory, cannot extract Foresight"
-            )
+        """Extract Foresight (assistant scene uses raw conversation text)"""
+        if not memcell:
+            logger.warning("[MemoryManager] Missing memcell, cannot extract Foresight")
             return []
+        uid = user_id
+        gid = group_id
+        # Build simple conversation transcript from memcell.original_data
+        lines = []
+        for msg in memcell.original_data or []:
+            if not isinstance(msg, dict):
+                continue
+            speaker_name = msg.get("speaker_name")
+            content = msg.get("content", "")
+            ts = msg.get("timestamp")
+            if ts:
+                lines.append(f"[{ts}] {speaker_name}: {content}")
+            else:
+                lines.append(f"{speaker_name}: {content}")
+        conversation_text = "\n".join(lines)
 
-        logger.debug(
-            f"[MemoryManager] Extracting Foresight for Episode: user_id={episode_memory.user_id}"
-        )
+        # Best-effort resolve user_name from raw messages
+
+        if uid is None:
+            display_name = ",".join(
+                set([msg.get("speaker_name") for msg in memcell.original_data or []])
+            )
+        else:
+            for msg in memcell.original_data or []:
+                speaker_id = msg.get("speaker_id")
+                if speaker_id == uid:
+                    display_name = msg.get("speaker_name")
+                    break
 
         extractor = ForesightExtractor(llm_provider=self.llm_provider)
-        return await extractor.generate_foresights_for_episode(episode_memory)
+        return await extractor.generate_foresights_for_conversation(
+            conversation_text=conversation_text,
+            timestamp=memcell.timestamp,
+            user_id=uid,
+            user_name=display_name,
+            group_id=gid,
+            ori_event_id_list=[memcell.event_id] if memcell.event_id else [],
+        )
 
-    async def _extract_event_log(self, episode_memory: Optional[EpisodeMemory]):
+    async def _extract_event_log(
+        self,
+        memcell: Optional[MemCell],
+        user_id: Optional[str] = None,
+        group_id: Optional[str] = None,
+    ):
         """Extract Event Log"""
-        if not episode_memory:
-            logger.warning(
-                "[MemoryManager] Missing episode_memory, cannot extract EventLog"
-            )
+        if not memcell:
+            logger.warning("[MemoryManager] Missing memcell, cannot extract EventLog")
             return None
 
-        logger.debug(
-            f"[MemoryManager] Extracting EventLog for Episode: user_id={episode_memory.user_id}"
-        )
+        uid = user_id
+        gid = group_id
+
+        logger.debug(f"[MemoryManager] Extracting EventLog: user_id={uid}")
 
         extractor = EventLogExtractor(llm_provider=self.llm_provider)
         return await extractor.extract_event_log(
-            episode_text=episode_memory.episode,
-            timestamp=episode_memory.timestamp,
-            user_id=episode_memory.user_id,
-            ori_event_id_list=episode_memory.ori_event_id_list,
-            group_id=episode_memory.group_id,
+            memcell=memcell,
+            timestamp=memcell.timestamp,
+            user_id=uid,
+            ori_event_id_list=[],
+            group_id=gid,
         )
 
     async def _extract_profile(

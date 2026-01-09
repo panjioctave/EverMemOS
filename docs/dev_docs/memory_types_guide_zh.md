@@ -5,28 +5,23 @@
 ## 1. 整体架构概览
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        原始对话数据流                                 │
-│                             ↓                                       │
-│                    ┌───────────────┐                                │
-│                    │   MemCell     │  ← 边界检测划分的记忆单元         │
-│                    │  (记忆单元)    │                                │
-│                    └───────┬───────┘                                │
-│                            │                                        │
-│            ┌───────────────┼───────────────┐                        │
-│            ↓               ↓               ↓                        │
-│   ┌────────────────┐ ┌────────────────┐ ┌────────────────┐          │
-│   │ Group Episode  │ │Personal Episode│ │Personal Episode│  × N     │
-│   │  (群体视角)     │ │  (用户A视角)     │ │  (用户B视角)    │          │
-│   └───────┬────────┘ └───────┬────────┘ └─────────────┬──┘          │
-│           │                  │                        │             │
-│     ┌─────┴─────┐      ┌─────┴─────────┐        ┌─────┴───────┐     │
-│     ↓           ↓      ↓               ↓        ↓             ↓     │
-│ ┌─────────┐ ┌────────┐ ┌─────────┐ ┌────────┐ ┌─────────┐ ┌────────┐│
-│ │Foresight│ │EventLog│ │Foresight│ │EventLog│ │Foresight│ │EventLog││
-│ │  ×10    │ │×(5-40) │ │  ×10    │ │ ×(5-40)│ │  ×10    │ │ ×(5-40)││
-│ └─────────┘ └────────┘ └─────────┘ └────────┘ └─────────┘ └────────┘│
-└─────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                              原始对话数据流                                     │
+│                                   ↓                                           │
+│                          ┌───────────────┐                                    │
+│                          │   MemCell     │  ← 边界检测划分的记忆单元              │
+│                          │  (记忆单元)    │                                    │
+│                          └───────┬───────┘                                    │
+│                                  │                                            │
+│   ┌───────────────┬──────────────┼───────────────┬───────────────┐            │
+│   │               │              │               │               │            │
+│   ↓               ↓              ↓               ↓               ↓            │
+│ ┌────────────────┐ ┌────────────────┐  ┌─────────────┐ ┌─────────────┐        │
+│ │ Group Episode  │ │Personal Episode│  │  Foresight  │ │  EventLog   │        │
+│ │  (所有场景)     │ │  (仅群聊场景)    │  │  (仅助手场景) │ │ (仅助手场景) │        │ 
+│ └────────────────┘ └────────────────┘  └─────────────┘ └─────────────┘        │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -77,13 +72,14 @@
 **业务意义**：
 - 为 AI 提供**人类可读的对话理解**
 - 用于需要上下文理解的场景（如对话续写、背景介绍）
-- 是 Foresight 和 EventLog 的**父节点**
 
 ---
 
 ### 2.3 Foresight（前瞻记忆）
 
-**定义**：基于 Episode 内容生成的**未来预测**，预测对话对用户后续生活和决策的潜在影响。
+> ⚠️ **注意**：Foresight 仅在 **助手场景** 中提取，群聊不提取。
+
+**定义**：基于对话内容直接生成的**未来预测**，预测对话对用户后续生活和决策的潜在影响。直接从 MemCell 提取。
 
 **核心字段**：
 
@@ -94,7 +90,8 @@
 | `start_time` | 预测有效起始时间 |
 | `end_time` | 预测有效结束时间 |
 | `duration_days` | 预测有效天数 |
-| `parent_episode_id` | 来源 Episode 的 ID |
+| `parent_type` | 关联的记忆类型(Memcell/Episode)（用于链接）|
+| `parent_id` | 关联的 记忆 ID（用于链接）|
 
 **业务意义**：
 - 支持**主动推送**场景（如：提醒用户即将到来的事件）
@@ -116,7 +113,9 @@
 
 ### 2.4 EventLog（事件日志）
 
-**定义**：从 Episode 中提取的**原子化事实**，每个事实是独立的、可检索的最小语义单元。
+> ⚠️ **注意**：EventLog 仅在 **助手场景** 中提取，群聊不提取。
+
+**定义**：直接从 MemCell的对话中提取的**原子化事实**，每个事实是独立的、可检索的最小语义单元。
 
 > ⚠️ **重要**：LLM 提取时返回一个包含多个 atomic_fact 的列表，但**存入数据库时每个 atomic_fact 会拆分成独立的一条 `EventLogRecord` 记录**。
 
@@ -126,7 +125,8 @@
 |------|------|
 | `atomic_fact` | **单条**原子事实（`str`） |
 | `vector` | 该原子事实的向量表示 |
-| `parent_episode_id` | 来源 Episode 的 ID |
+| `parent_type` | 关联的记忆类型(Memcell/Episode)（用于链接）|
+| `parent_id` | 关联的记忆 ID（用于链接）|
 | `timestamp` | 事件发生时间 |
 | `user_id` / `group_id` | 归属信息 |
 
@@ -138,11 +138,11 @@
 **示例**（3 条数据库记录）：
 ```json
 // 记录1
-{ "atomic_fact": "张三提出了新的产品设计方案", "parent_episode_id": "ep_001", ... }
+{ "atomic_fact": "张三提出了新的产品设计方案", "parent_type": "memcell", "parent_id": "mc_001", ... }
 // 记录2
-{ "atomic_fact": "李四表示同意该方案的技术可行性", "parent_episode_id": "ep_001", ... }
+{ "atomic_fact": "李四表示同意该方案的技术可行性", "parent_type": "memcell", "parent_id": "mc_001", ... }
 // 记录3  
-{ "atomic_fact": "团队决定下周一开始原型开发", "parent_episode_id": "ep_001", ... }
+{ "atomic_fact": "团队决定下周一开始原型开发", "parent_type": "memcell", "parent_id": "mc_001", ... }
 ```
 
 ---
@@ -154,40 +154,34 @@
 | 层级 | 数据库记录数 | 说明 |
 |------|-------------|------|
 | MemCell | 1 | 一次边界检测产生一个 |
-| Episode | 1 + N | 1个 Group + N个 Personal（N = 参与者数） |
-| Foresight | 10 × (1+N) | 每个 Episode 产生 ~10 条预测 |
-| EventLog | **M × (1+N)** | 每个 Episode 产生 M 条记录（M = atomic_fact 数，通常 5-15） |
+| Episode | 1（助手）/ 1+N（群聊）| 助手场景：1个 Group（复制给用户）；群聊：1个 Group + N个 Personal |
+| Foresight | ~10 | **仅助手场景**，每个 MemCell 产生 4-10 条预测 |
+| EventLog | **M** | **仅助手场景**，M = atomic_fact 数（通常 5-15） |
 
 ### 3.2 典型场景示例
 
 **场景A：助手对话（1 对 1）**
 ```
 MemCell: 1
-├── Group Episode: 1 (同时复制给用户)
-│   ├── Foresight: 10 条记录
-│   └── EventLog: 8 条记录 (假设提取了 8 个 atomic_fact)
-└── 数据库总记录数: 1 + 10 + 8 = 19
+├── Group Episode: 1 (复制给用户)
+├── Foresight: ~10 条 (从 MemCell 直接提取)
+├── EventLog: ~8 条 (从 MemCell 直接提取)
+└── 数据库总记录数: 1 Episode + 10 Foresight + 8 EventLog = 19
 ```
 
 **场景B：群聊（3 人参与）**
 ```
 MemCell: 1
 ├── Group Episode: 1
-│   ├── Foresight: 10 条
-│   └── EventLog: 10 条 (假设 10 个 atomic_fact)
 ├── Personal Episode (UserA): 1
-│   ├── Foresight: 10 条
-│   └── EventLog: 8 条
 ├── Personal Episode (UserB): 1
-│   ├── Foresight: 10 条
-│   └── EventLog: 8 条
 ├── Personal Episode (UserC): 1
-│   ├── Foresight: 10 条
-│   └── EventLog: 8 条
-└── 数据库总记录数: 4 Episodes + 40 Foresights + 34 EventLogs = 78
+├── Foresight: 0 (群聊不提取)
+├── EventLog: 0 (群聊不提取)
+└── 数据库总记录数: 4 Episodes
 ```
 
-> 💡 **注意**：EventLog 记录数取决于 LLM 从对话中提取出多少条 atomic_fact，通常为 5-15 条/Episode。
+> 💡 **注意**：Foresight 和 EventLog 仅在助手（1对1）场景提取，以提高效率。
 
 ---
 
@@ -231,8 +225,9 @@ MemCell: 1
 # 主流程入口
 biz_layer/mem_memorize.py::memorize()
     └── process_memory_extraction()
-        ├── _extract_episodes()           # Episode 提取
-        └── _extract_foresight_and_eventlog()  # Foresight/EventLog 提取
+        ├── _extract_episodes()      # Episode 提取（所有场景）
+        ├── _extract_foresights()    # Foresight 提取（仅助手场景）
+        └── _extract_event_logs()    # EventLog 提取（仅助手场景）
 ```
 
 ### 6.2 各类型提取器
@@ -264,13 +259,15 @@ agentic_layer/memory_manager.py::MemoryManager
 - 在检索时可根据 user_id 过滤出用户关心的内容
 
 **Q2：Foresight 的 10 条是固定的吗？**
-- 代码中设定为提取 10 条预测（最大值）
+- 代码中设定为提取 4-10 条预测
 - 实际可能少于 10 条（LLM 输出不足时会 warning 但不会 retry）
+- **仅在助手场景提取**（群聊不提取）
 
 **Q3：EventLog 数据库记录数如何确定？**
-- LLM 根据 Episode 内容提取 atomic_fact 列表
+- LLM 根据对话内容提取 atomic_fact 列表
 - **每个 atomic_fact 单独存为一条 `EventLogRecord`**
-- 通常每个 Episode 产生 5-15 条 EventLog 记录，取决于对话复杂度
+- 通常每个 MemCell 产生 5-15 条 EventLog 记录，取决于对话复杂度
+- **仅在助手场景提取**（群聊不提取）
 
 **Q4：如何选择检索哪种记忆类型？**
 - 需要语境理解 → Episode
@@ -284,4 +281,5 @@ agentic_layer/memory_manager.py::MemoryManager
 | 版本 | 日期 | 说明 |
 |------|------|------|
 | v1.0 | 2024-12 | 初版文档 |
+| v1.1 | 2025-01 | Foresight/EventLog 改为从 MemCell 直接提取（仅助手场景）|
 
