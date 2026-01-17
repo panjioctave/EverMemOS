@@ -8,11 +8,13 @@ Main business application of the Memsys memory system, including:
 - Full-text writing and editing agent
 - Document management and resource processing services
 """
+
 import argparse
+import logging
 import os
 import sys
+
 import uvicorn
-import logging
 
 # Environment variables are not loaded yet, so cannot use get_logger
 logger = logging.getLogger(__name__)
@@ -159,3 +161,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Malas
